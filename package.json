@@ -1,0 +1,30 @@
+{
+  "name": "Rebus",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Dailyglancer (http://www.dailyglancer.com/)",
+  "contributors": [
+    {
+      "name": "Michael Gena",
+      "email": "michael@dailyglancer.com"
+    }
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/michaelgena/rebus",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/michaelgena/rebus.git"
+  },
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android"
+  },
+  "dependencies": {
+    "react": "^0.14.8",
+    "react-native": "^0.22.2",
+    "react-native-button": "^1.4.2",
+    "react-native-drawer": "^2.0.0",
+    "react-native-router-flux": "^3.2.5"
+  }
+}
