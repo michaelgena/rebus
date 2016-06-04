@@ -1,222 +1,83 @@
 'use strict';
-import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight } from 'react-native';
+import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight, ScrollView, PixelRatio, Animated, Navigator, Dimensions } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Button from 'react-native-button';
-var json = {
+import dismissKeyboard from 'dismissKeyboard';
+var Clipboard = require('react-native-clipboard');
 
-           "a" : [
-                    {'name':'alarm', 'value':'\u{23F0}'},
-                    {'name':'alembic', 'value':'\u{2697}'},
-                    {'name':'anchor', 'value':'\u{2693}'},
-                    {'name':'aquarius', 'value':'\u{2652}'},
-                    {'name':'aries', 'value':'\u{2648}'},
-                    {'name':'atom', 'value':'\u{269B}'}
-                  ],
-            "b" : [
-                    {'name':'baseball', 'value':'\u{26BE}'},
-                    {'name':'black', 'value':'\u{25AA}'},
-                    {'name':'black', 'value':'\u{25FC}'},
-                    {'name':'black', 'value':'\u{25FE}'}
-                  ],
-            "c" : [
-                    {'name':'cancer', 'value':'\u{264B}'},
-                    {'name':'capricorn', 'value':'\u{2651}'},
-                    {'name':'check', 'value':'\u{2611}'},
-                    {'name':'circle', 'value':'\u{26AA}'},
-                    {'name':'circle', 'value':'\u{26AB}'},
-                    {'name':'cloud', 'value':'\u{2601}'},
-                    {'name':'cloudy', 'value':'\u{26C5}'},
-                    {'name':'clubs', 'value':'\u{2663}'},
-                    {'name':'coffee', 'value':'\u{2615}'},
-                    {'name':'coffin', 'value':'\u{26B0}'},
-                    {'name':'comet', 'value':'\u{2604}'},
-                    {'name':'copyright', 'value':'\u{00A9}'}
-                  ],
+var dataEN = require("../../data/EN.js");
+var dataFR = require("../../data/FR.js");
+var json = dataEN.get();
+var jsonFR = dataFR.get();
 
-            "d" : [
-                    {'name':'diamond', 'value':'\u{2666}'}
-                  ],
-
-            "e" : [
-                    {'name':'eject', 'value':'\u{23CF}'}
-                  ],
-
-            "f" : [
-                    {'name':'forward', 'value':'\u{23E9}'}
-                  ],
-
-            "g" : [
-                    {'name':'gear', 'value':'\u{2699}'},
-                    {'name':'gemini', 'value':'\u{264A}'},
-                    {'name':'gray', 'value':'\u{25FD}'}
-                  ],
-
-            "h" : [
-                    {'name':'hammer', 'value':'\u{2692}'},
-                    {'name':'hat', 'value':'\u{1F3A9}'},
-                    {'name':'heart', 'value':'\u{2665}'},
-                    {'name':'hot', 'value':'\u{2668}'},
-                    {'name':'hourglass', 'value':'\u{231B}'}
-                  ],
-
-            "i" : [
-                    {'name':'information', 'value':'\u{2139}'}
-                  ],
-
-            "j" : [
-
-                  ],
-
-            "k" : [
-                    {'name':'keyboard', 'value':'\u{2328}'}
-                  ],
-
-            "l" : [
-                    {'name':'left', 'value':'\u{25C0}'},
-                    {'name':'leo', 'value':'\u{264C}'},
-                    {'name':'libra', 'value':'\u{264E}'},
-                    {'name':'lily', 'value':'\u{269C}'}
-                  ],
-
-            "m" : [
-                    {'name':'m', 'value':'\u{24C2}'},
-                    {'name':'muslim', 'value':'\u{262A}'}
-                  ],
-
-            "n" : [
-                    {'name':'northeast', 'value':'\u{2197}'},
-                    {'name':'northwest', 'value':'\u{2196}'}
-                  ],
-
-            "o" : [
-                    {'name':'orthodox', 'value':'\u{2626}'}
-                  ],
-
-            "p" : [
-                    {'name':'pause', 'value':'\u{23F8}'},
-                    {'name':'peace', 'value':'\u{262E}'},
-                    {'name':'pisces', 'value':'\u{2653}'},
-                    {'name':'playpause', 'value':'\u{23EF}'}
-                  ],
-
-            "q" : [
-
-                  ],
-
-            "r" : [
-                    {'name':'radioactive', 'value':'\u{2622}'},
-                    {'name':'record', 'value':'\u{23FA}'},
-                    {'name':'recycle', 'value':'\u{267B}'},
-                    {'name':'registered', 'value':'\u{00AE}'},
-                    {'name':'rewind', 'value':'\u{23EA}'},
-                    {'name':'right', 'value':'\u{25B6}'}
-                  ],
-
-            "s" : [
-                    {'name':'sad', 'value':'\u{2639}'},
-                    {'name':'sagittarius', 'value':'\u{2650}'},
-                    {'name':'scales', 'value':'\u{2696}'},
-                    {'name':'scorpius', 'value':'\u{264F}'},
-                    {'name':'shamrock', 'value':'\u{2618}'},
-                    {'name':'skull', 'value':'\u{2620}'},
-                    {'name':'smile', 'value':'\u{263A}'},
-                    {'name':'snowman', 'value':'\u{2603}'},
-                    {'name':'snowman', 'value':'\u{26C4}'},
-                    {'name':'soccer', 'value':'\u{26BD}'},
-                    {'name':'southeast', 'value':'\u{2198}'},
-                    {'name':'southwest', 'value':'\u{2199}'},
-                    {'name':'spades', 'value':'\u{2660}'},
-                    {'name':'stop', 'value':'\u{23F9}'},
-                    {'name':'stopwatch', 'value':'\u{23F1}'},
-                    {'name':'sun', 'value':'\u{2600}'},
-                    {'name':'swords', 'value':'\u{2694}'}
-                  ],
-
-            "t" : [
-                    {'name':'taurus', 'value':'\u{2649}'},
-                    {'name':'telephone', 'value':'\u{260E}'},
-                    {'name':'thunder', 'value':'\u{26C8}'},
-                    {'name':'timer', 'value':'\u{23F2}'},
-                    {'name':'trademark', 'value':'\u{2122}'}
-                  ],
-
-            "u" : [
-                    {'name':'up', 'value':'\u{2B06}'},
-                    {'name':'umbrella', 'value':'\u{2602}'},
-                    {'name':'umbrella', 'value':'\u{2614}'}
-                  ],
-
-            "v" : [
-                    {'name':'vase', 'value':'\u{26B1}'},
-                    {'name':'virgo', 'value':'\u{264D}'},
-                    {'name':'voltage', 'value':'\u{26A1}'}
-                  ],
-
-            "w" : [
-                    {'name':'warning', 'value':'\u{26A0}'},
-                    {'name':'watch', 'value':'\u{231A}'},
-                    {'name':'wheelchair', 'value':'\u{267F}'},
-                    {'name':'white', 'value':'\u{25AB}'},
-                    {'name':'white', 'value':'\u{25FB}'}
-                  ],
-
-            "x" : [
-
-                  ],
-
-            "y" : [
-                    {'name':'yinyang', 'value':'\u{262F}'}
-                  ],
-
-            "z" : [
-
-                  ]
-          }
-
-class Rebus extends Component {
+class Main extends Component {
 
   constructor(opts) {
     super(opts);
+
+    let textInputHeight = 40;
+    var STATUS_BAR_HEIGHT = Navigator.NavigationBar.Styles.General.StatusBarHeight;
+    this.viewMaxHeight = Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT -textInputHeight;
+    console.log("initial this.viewMaxHeight "+this.viewMaxHeight);
+
     this.state = {
        text: "",
        rebus:"",
        previousText:"",
        currentText:"",
-       rebusArray:[]
+       rebusArray:[],
+       locale:"EN",
+       height:this.viewMaxHeight,
+       viewMaxHeight: this.viewMaxHeight
     };
   }
 
   buttonClicked() {
-      console.log(this.state.rebus);
+      Clipboard.set(this.state.rebus);
+      dismissKeyboard();
   }
 
   render() {
     return (
-      <View style={this.styles.textInputContainer}>
-        <Text style={{fontSize: 30}}> {this.generate(this.state.text)}</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => this.setState({text})}
-          placeholder="Type your text here..."
-          autoCorrect={false}
-          multiline={true}
-        />
-        <Button
-          style={this.styles.sendButton}
-          styleDisabled={this.styles.sendButtonDisabled}
-          onPress={this.onSend}
-          disabled={this.state.disabled}
-        >
-          {this.props.sendButtonText}
-        </Button>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={this.buttonClicked.bind(this)}>
-          <View>
-            <Text style={styles.buttonText}>Send Rebus</Text>
-          </View>
-        </TouchableHighlight>
-      </View>
+      <Animated.View
+        style={{
+          height: this.state.height,
+          justifyContent: 'flex-end',
+          flex:1,
+          flexDirection: 'column',
+          alignItems: 'center',
+          backgroundColor: '#FDF058',
+          paddingTop: 30
+        }}
+      >
+          <ScrollView>
+          <TouchableHighlight onPress={()=>buttonClicked()}>
+          <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
+          </TouchableHighlight>
+          </ScrollView>
+
+        <View style={styles.textInputContainer}>
+          <ScrollView
+          onKeyboardDidShow={this.onKeyboardDidShow}
+          >
+          <TextInput
+            ref='myInput'
+            style={styles.textInput}
+            onChangeText={(text) => this.setState({text})}
+            placeholder="Type your text here..."
+            autoCorrect={false}
+            multiline={true}
+          />
+          <Button
+            style={styles.sendButton}
+            onPress={this.buttonClicked.bind(this)}
+          >
+          Done
+          </Button>
+          </ScrollView>
+        </View>
+
+      </Animated.View>
     );
   }
 
@@ -366,15 +227,15 @@ class Rebus extends Component {
       return rebusObj;
     }
     var char = rebusObj.word.toLowerCase().charAt(0);
-    for(var j = 0; j < json[char].length; j++){
-      if(json[char][j].name.startsWith(rebusObj.word.toLowerCase()) == true){
+    for(var j = 0; j < jsonFR[char].length; j++){
+      if(jsonFR[char][j].name.startsWith(rebusObj.word.toLowerCase()) == true){
           //are we building the rebus on the go
           if(this.state.rebusArray.length>0 && this.state.rebusArray[this.state.rebusArray.length-1].nbSpace == rebusObj.nbSpace && this.state.currentText.length >= this.state.previousText.length){
               this.state.rebusArray.splice(-1,1);
           }
-          rebusObj.rebus = json[char][j].value;
+          rebusObj.rebus = jsonFR[char][j].value;
 
-          var delta = json[char][j].name.replace(rebusObj.word.toLowerCase(), "");
+          var delta = jsonFR[char][j].name.replace(rebusObj.word.toLowerCase(), "");
           if(delta.length>0){
             rebusObj.delta = delta;
           }
@@ -389,6 +250,18 @@ class Rebus extends Component {
     }
     return rebusObj;
   }
+
+  onKeyboardDidShow(e) {
+    var newHeight = 464 - e.endCoordinates.height;
+    //console.log("this.viewMaxHeight : [" + this.state.viewMaxHeight +"]");
+    console.log("e.endCoordinates.height : [" + e.endCoordinates.height +"]");
+    console.log("called on keyboard will show: [" + newHeight+"]");
+    //this.state.height = newHeight;
+    /*Animated.timing(this.state.height, {
+        toValue: 464 - e.endCoordinates.height,
+        duration: 200,
+      }).start();*/
+    }
 }
 
 
@@ -399,6 +272,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FDF058',
+    paddingTop: 30
   },
   input:{
     height: 50,
@@ -427,17 +301,18 @@ const styles = StyleSheet.create({
   },
 
   textInputContainer: {
-    height: 44,
-    borderTopWidth: 1 / PixelRatio.get(),
+    alignSelf: 'stretch',
     borderColor: '#b2b2b2',
+    borderTopWidth: 1 / PixelRatio.get(),
     flexDirection: 'row',
+    backgroundColor: '#FFF',
     paddingLeft: 10,
-    paddingRight: 10,
+    paddingRight: 10
   },
   textInput: {
     alignSelf: 'center',
     height: 30,
-    width: 100,
+    width: 200,
     backgroundColor: '#FFF',
     flex: 1,
     padding: 0,
@@ -445,9 +320,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   sendButton: {
-    marginTop: 11,
-    marginLeft: 10,
+    alignSelf: 'flex-end',
+    marginTop: 8,
+    marginLeft: 5,
   },
+  rebus: {
+    fontSize: 30,
+    alignSelf: 'flex-end'
+  }
 })
 
-export default Rebus;
+export default Main;

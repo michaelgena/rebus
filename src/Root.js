@@ -6,7 +6,7 @@ import loginInfo from './utils/loginInfo';
 import Drawer from './components/drawer/Drawer';
 import Splash from './components/Splash';
 import Login from './components/Login';
-import Rebus from './components/app/Rebus';
+import Main from './components/app/Main';
 
 const DRAWER_IMAGE = require('./img/drawer_menu.png');
 const BACK_BUTTON_IMAGE = require('./img/back.png');
@@ -27,7 +27,7 @@ class Root extends Component {
         <Scene key="login" component={Login} type="replace" title="Login" />
         <Scene key="app" component={Drawer} type="replace">
           <Scene key="main">
-            <Scene key="rebus" component={Rebus} initial={true} title='Rebus' />
+            <Scene key="main" component={Main} initial={true} title='Rebus' />
           </Scene>
         </Scene>
       </Scene>

@@ -31,7 +31,10 @@ class DrawerContent extends React.Component {
 
     return (
       <View style={styles.container}>
-      
+      <View style={styles.menuItem}>
+        <Image style={styles.itemImage} source={require('../../img/settings.png')} />
+        <Button style={styles.itemLabel} onPress={() => { drawer.close();}}><Text style={styles.text}>Settings</Text></Button>
+      </View>
       </View>
     );
   }
