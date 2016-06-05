@@ -50,7 +50,7 @@ var ExpandingTextInput = React.createClass({
   },
 
   onChange: function(event) {
-    console.log('ExpandingTextInput.onChange');
+    //console.log('ExpandingTextInput.onChange');
     this.setState({text: event.nativeEvent.text});
     if (this.props.onChange) this.props.onChange(event);
   },

@@ -32,16 +32,17 @@ class Main extends Component {
 
     let textInputHeight = 0;
     var STATUS_BAR_HEIGHT = Navigator.NavigationBar.Styles.General.StatusBarHeight;
-    console.log("STATUS_BAR_HEIGHT "+STATUS_BAR_HEIGHT);
-    console.log("Navigator.NavigationBar.Styles.General.NavBarHeight "+Navigator.NavigationBar.Styles.General.NavBarHeight);
+    //console.log("STATUS_BAR_HEIGHT "+STATUS_BAR_HEIGHT);
+    //console.log("Navigator.NavigationBar.Styles.General.NavBarHeight "+Navigator.NavigationBar.Styles.General.NavBarHeight);
     //this.viewMaxHeight = Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT -textInputHeight;
     this.viewMaxHeight = Dimensions.get('window').height - textInputHeight;
     this.viewMaxWidth = Dimensions.get('window').width
-    console.log("initial this.viewMaxHeight "+this.viewMaxHeight);
+    //console.log("initial this.viewMaxHeight "+this.viewMaxHeight);
 
     this.state = {
        text: "",
        rebus:"",
+       finalRebus:"",
        previousText:"",
        currentText:"",
        rebusArray:[],
@@ -57,7 +58,12 @@ class Main extends Component {
           toValue: this.viewMaxHeight,
           duration: 200,
         }).start();
-      this.toggle();
+
+      this.state.finalRebus = this.state.rebus;
+      this.state.text = "";
+      if(this.state.finalRebus !== ""){
+        this.toggle();
+      }
   }
 
   inputFocused() {
@@ -73,11 +79,11 @@ class Main extends Component {
 
   tweet() {
     KDSocialShare.tweet({
-        'text':this.state.rebus,
+        'text':this.state.finalRebus,
         'link':'',
-        'imagelink':'',
+        //'imagelink':'',
         //or use image
-        'image': 'rebus-icon',
+        'image': 'RebusIcon.png',
       },
       (results) => {
         console.log(results);
@@ -87,11 +93,11 @@ class Main extends Component {
 
   shareOnFacebook() {
     KDSocialShare.shareOnFacebook({
-        'text':this.state.rebus,
+        'text':this.state.finalRebus,
         'link':'',
-        'imagelink':'',
+        //'imagelink':'',
         //or use image
-        'image': 'rebus-icon',
+        'image': 'RebusIcon.png',
       },
       (results) => {
         console.log(results);
@@ -107,7 +113,7 @@ class Main extends Component {
         this.setState({
             hideShare: !this.state.hideShare
         });
-    };
+  };
 
   render() {
     return (
@@ -121,8 +127,11 @@ class Main extends Component {
           <ScrollView
           onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
           >
+          <Toggle hidden={this.state.hideShare}>
+          <Text style={styles.rebus}> {this.state.rebus}</Text>
+          </Toggle>
           <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
-          
+
           <Toggle hidden={this.state.hideShare}>
             <View style={styles.shareContainer}>
               <TouchableHighlight onPress={this.tweet.bind(this)}>
@@ -156,7 +165,9 @@ class Main extends Component {
           />
 
           <ExpandingTextInput
+            value={this.state.text}
             onChangeText={(text) => this.setState({text})}
+            controlled={true}
             placeholder="Type your text here..."
             autoCorrect={false}
             multiline={true}
@@ -317,7 +328,7 @@ class Main extends Component {
     }
 
     this.state.previousText = text;
-    this.state.text = this.state.rebus;
+    //this.state.text = this.state.rebus;
     return this.state.rebus;
   }
 
@@ -433,7 +444,7 @@ const styles = StyleSheet.create({
   },
   rebus: {
     fontSize: 30,
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-start'
   }
 })
 
