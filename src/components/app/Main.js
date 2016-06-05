@@ -6,6 +6,8 @@ import dismissKeyboard from 'dismissKeyboard';
 var ExpandingTextInput = require("./ExpandingTextInput");
 var Clipboard = require('react-native-clipboard');
 import Radio, {RadioButton} from 'react-native-simple-radio-button';
+var KDSocialShare = require('NativeModules').KDSocialShare;
+import Toggle from 'react-native-toggle';
 
 var dataEN = require("../../data/EN.js");
 var dataFR = require("../../data/FR.js");
@@ -34,6 +36,7 @@ class Main extends Component {
     console.log("Navigator.NavigationBar.Styles.General.NavBarHeight "+Navigator.NavigationBar.Styles.General.NavBarHeight);
     //this.viewMaxHeight = Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT -textInputHeight;
     this.viewMaxHeight = Dimensions.get('window').height - textInputHeight;
+    this.viewMaxWidth = Dimensions.get('window').width
     console.log("initial this.viewMaxHeight "+this.viewMaxHeight);
 
     this.state = {
@@ -43,21 +46,22 @@ class Main extends Component {
        currentText:"",
        rebusArray:[],
        language:0,
-       height: new Animated.Value(this.viewMaxHeight)
+       height: new Animated.Value(this.viewMaxHeight),
+       hideShare: true
     };
   }
 
   buttonClicked() {
-      Clipboard.set(this.state.rebus);
       dismissKeyboard();
       Animated.timing(this.state.height, {
           toValue: this.viewMaxHeight,
           duration: 200,
         }).start();
+      this.toggle();
   }
 
   inputFocused() {
-
+    this.state.hideShare = true;
   }
 
   onKeyboardDidShow(e) {
@@ -66,6 +70,44 @@ class Main extends Component {
         duration: 200,
       }).start();
     }
+
+  tweet() {
+    KDSocialShare.tweet({
+        'text':this.state.rebus,
+        'link':'',
+        'imagelink':'',
+        //or use image
+        'image': 'rebus-icon',
+      },
+      (results) => {
+        console.log(results);
+      }
+    );
+  }
+
+  shareOnFacebook() {
+    KDSocialShare.shareOnFacebook({
+        'text':this.state.rebus,
+        'link':'',
+        'imagelink':'',
+        //or use image
+        'image': 'rebus-icon',
+      },
+      (results) => {
+        console.log(results);
+      }
+    );
+  }
+
+  copyToClipboard(){
+    Clipboard.set(this.state.rebus);
+  }
+
+  toggle = () => {
+        this.setState({
+            hideShare: !this.state.hideShare
+        });
+    };
 
   render() {
     return (
@@ -79,9 +121,30 @@ class Main extends Component {
           <ScrollView
           onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
           >
-          <TouchableHighlight onPress={this.buttonClicked.bind(this)} underlayColor='#dddddd'>
           <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
-          </TouchableHighlight>
+          
+          <Toggle hidden={this.state.hideShare}>
+            <View style={styles.shareContainer}>
+              <TouchableHighlight onPress={this.tweet.bind(this)}>
+                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
+                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Twitter</Text>
+                </View>
+              </TouchableHighlight>
+
+              <TouchableHighlight onPress={this.shareOnFacebook.bind(this)}>
+                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#3b5998'}}>
+                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Facebook</Text>
+                </View>
+              </TouchableHighlight>
+
+              <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
+                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
+                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                </View>
+              </TouchableHighlight>
+            </View>
+          </Toggle>
+
           </ScrollView>
 
         <View style={styles.textInputContainer}>
@@ -93,14 +156,12 @@ class Main extends Component {
           />
 
           <ExpandingTextInput
-
             onChangeText={(text) => this.setState({text})}
             placeholder="Type your text here..."
             autoCorrect={false}
             multiline={true}
             onFocus={this.inputFocused.bind(this)}
           />
-
 
           <Button
             style={styles.sendButton}
@@ -350,6 +411,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     paddingLeft: 10,
     paddingRight: 10
+  },
+  shareContainer: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
   },
   textInput: {
     alignSelf: 'center',
