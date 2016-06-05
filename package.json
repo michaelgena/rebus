@@ -27,6 +27,7 @@
     "react-native-clipboard": "0.0.5",
     "react-native-drawer": "^2.0.0",
     "react-native-keyboard-aware-scroll-view": "^0.1.0",
-    "react-native-router-flux": "^3.2.5"
+    "react-native-router-flux": "^3.2.5",
+    "react-native-simple-radio-button": "^2.1.0"
   }
 }

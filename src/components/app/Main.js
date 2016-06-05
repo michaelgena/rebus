@@ -5,10 +5,11 @@ import Button from 'react-native-button';
 import dismissKeyboard from 'dismissKeyboard';
 var ExpandingTextInput = require("./ExpandingTextInput");
 var Clipboard = require('react-native-clipboard');
+import Radio, {RadioButton} from 'react-native-simple-radio-button';
 
 var dataEN = require("../../data/EN.js");
 var dataFR = require("../../data/FR.js");
-var json = dataEN.get();
+var jsonEN = dataEN.get();
 var jsonFR = dataFR.get();
 var keyboardHeight = 0;
 
@@ -16,6 +17,11 @@ var Latinise={};Latinise.latin_map={"Á":"A","Ă":"A","Ắ":"A","Ặ":"A","Ằ":
 String.prototype.latinise=function(){return this.replace(/[^A-Za-z0-9\[\] ]/g,function(a){return Latinise.latin_map[a]||a})};
 String.prototype.latinize=String.prototype.latinise;
 String.prototype.isLatin=function(){return this==this.latinise()};
+
+var radio_props = [
+  {label: 'EN', value: 0 },
+  {label: 'FR', value: 1 }
+];
 
 class Main extends Component {
 
@@ -36,7 +42,7 @@ class Main extends Component {
        previousText:"",
        currentText:"",
        rebusArray:[],
-       locale:"EN",
+       language:0,
        height: new Animated.Value(this.viewMaxHeight)
     };
   }
@@ -79,6 +85,12 @@ class Main extends Component {
           </ScrollView>
 
         <View style={styles.textInputContainer}>
+
+          <Radio
+            radio_props={radio_props}
+            initial={0}
+            onPress={(value) => {this.setState({language:value})}}
+          />
 
           <ExpandingTextInput
 
@@ -256,13 +268,14 @@ class Main extends Component {
     if(/^[A-Za-z\u00C0-\u017F]+$/.test(char)){
       char = char.latinize();
       var foundMatch = false;
-      for(var j = 0; j < jsonFR[char].length; j++){
-        if(jsonFR[char][j].name.startsWith(rebusObj.word.toLowerCase().latinize()) == true){
+      var json = this.state.language == 1 ? jsonFR : jsonEN;
+      for(var j = 0; j < json[char].length; j++){
+        if(json[char][j].name.startsWith(rebusObj.word.toLowerCase().latinize()) == true){
             //are we building the rebus on the go
 
-            rebusObj.rebus = jsonFR[char][j].value;
+            rebusObj.rebus = json[char][j].value;
 
-            var delta = jsonFR[char][j].name.replace(rebusObj.word.toLowerCase().latinize(), "");
+            var delta = json[char][j].name.replace(rebusObj.word.toLowerCase().latinize(), "");
             if(delta.length>0){
               rebusObj.delta = delta;
             }
@@ -282,12 +295,13 @@ class Main extends Component {
     if(this.state.currentText !== undefined && this.state.currentText.split(" ").length > this.state.rebusArray.length){
       var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
       this.state.rebusArray.push(rebusObjJSON);
+      rebusObj.word = "";
+      rebusObj.delta = "";
+      rebusObj.left = "";
+      rebusObj.rebus = "";
     }
 
-    /*rebusObj.word = "";
-    rebusObj.delta = "";
-    rebusObj.left = "";
-    rebusObj.rebus = "";*/
+
     return rebusObj;
   }
 }
