@@ -54,10 +54,6 @@ class Main extends Component {
 
   buttonClicked() {
       dismissKeyboard();
-      Animated.timing(this.state.height, {
-          toValue: this.viewMaxHeight,
-          duration: 200,
-        }).start();
 
       this.state.finalRebus = this.state.rebus;
       this.state.text = "";
@@ -76,6 +72,14 @@ class Main extends Component {
         duration: 200,
       }).start();
     }
+
+  onKeyboardDidHide(e){
+    Animated.timing(this.state.height, {
+        toValue: this.viewMaxHeight,
+        duration: 200,
+      }).start();
+
+  }
 
   tweet() {
     KDSocialShare.tweet({
@@ -106,7 +110,7 @@ class Main extends Component {
   }
 
   copyToClipboard(){
-    Clipboard.set(this.state.rebus);
+    Clipboard.set(this.state.finalRebus);
   }
 
   toggle = () => {
@@ -126,6 +130,7 @@ class Main extends Component {
       <View style={styles.container}>
           <ScrollView
           onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
+          onKeyboardDidHide={this.onKeyboardDidHide.bind(this)}
           >
           <Toggle hidden={this.state.hideShare}>
           <Text style={styles.rebus}> {this.state.rebus}</Text>
