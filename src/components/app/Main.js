@@ -19,15 +19,6 @@ var Latinise={};Latinise.latin_map={"Á":"A","Ă":"A","Ắ":"A","Ặ":"A","Ằ":
 String.prototype.latinise=function(){return this.replace(/[^A-Za-z0-9\[\] ]/g,function(a){return Latinise.latin_map[a]||a})};
 String.prototype.latinize=String.prototype.latinise;
 String.prototype.isLatin=function(){return this==this.latinise()};
-Array.prototype.clean = function(deleteValue) {
-  for (var i = 0; i < this.length; i++) {
-    if (this[i] == deleteValue) {
-      this.splice(i, 1);
-      i--;
-    }
-  }
-  return this;
-};
 
 var radio_props = [
   {label: 'EN', value: 0 },
@@ -212,25 +203,13 @@ class Main extends Component {
     }
     this.state.currentText = text;
     this.state.rebus = "";
+    this.state.rebusArray = [];
     var rebusObj = {};
     var textArray = text.split(" ");
-    //textArray.clean("");
-    //position of i should be just after the last space
-    var i = textArray.length - 1;
-    //rebusObj.word = textArray[i];
+
+    var i = 0;
+
     rebusObj.nbSpace = textArray.length - 1;
-
-    var deleteMode = text.length < this.state.previousText.length;
-
-    //unless we started removing some characters from the input
-    //in this case we start from scratch
-    if(deleteMode){
-      i = 0;
-      this.state.rebus = "";
-      this.state.rebusArray = [];
-      //in case there are other spaces after
-      //rebusObj.word = textArray[0];
-    }
 
     while (i < textArray.length) {
         if(textArray[i] == ""){
@@ -242,37 +221,38 @@ class Main extends Component {
           continue;
         }
         rebusObj.word = textArray[i];
+        rebusObj.i = i;
         var char = rebusObj.word.toLowerCase().charAt(0);
 
         //we are deleting values from the input
-        if(deleteMode){
-          this.matchEmoji(rebusObj);
-          if(rebusObj.rebus == undefined || rebusObj.rebus.length == 0){
-            //try to match the word by removing the last character each time
-            rebusObj.left = "";
-            for(var n=rebusObj.word.length-1; n>0; n--){
-              rebusObj.left = rebusObj.word.charAt(n)+rebusObj.left;
-              rebusObj.word = rebusObj.word.substring(0,n);
-              this.matchEmoji(rebusObj);
-              if(rebusObj.rebus !== undefined && rebusObj.rebus.length > 0){
-                var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
-                this.state.rebusArray.splice(i,1);
-                this.state.rebusArray.push(rebusObjJSON);
-                rebusObj.word = "";
-                rebusObj.delta = "";
-                rebusObj.left = "";
-                rebusObj.prev = "";
-                rebusObj.rebus = "";
-                break;
-              }
+
+        this.matchEmoji(rebusObj);
+        if(rebusObj.rebus == undefined || rebusObj.rebus.length == 0){
+          //try to match the word by removing the last character each time
+          rebusObj.left = "";
+          for(var n=rebusObj.word.length-1; n>0; n--){
+            rebusObj.left = rebusObj.word.charAt(n)+rebusObj.left;
+            rebusObj.word = rebusObj.word.substring(0,n);
+            this.matchEmoji(rebusObj);
+            if(rebusObj.rebus !== undefined && rebusObj.rebus.length > 0){
+              var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
+              this.state.rebusArray.splice(i,1);
+              this.state.rebusArray.push(rebusObjJSON);
+              rebusObj.word = "";
+              rebusObj.delta = "";
+              rebusObj.left = "";
+              rebusObj.prev = "";
+              rebusObj.rebus = "";
+              break;
             }
-          }else{
-            rebusObj.word = "";
-            rebusObj.delta = "";
-            rebusObj.left = "";
-            rebusObj.rebus = "";
           }
         }else{
+          rebusObj.word = "";
+          rebusObj.delta = "";
+          rebusObj.left = "";
+          rebusObj.rebus = "";
+        }
+        /*}else{
             this.matchEmoji(rebusObj);
             /*var delta = (rebusObj.delta !== undefined) ? rebusObj.delta.length : 0;
             if(delta > 1 && rebusObj.word.length > 3){
@@ -320,7 +300,7 @@ class Main extends Component {
             */
 
             //If we didn't match anything
-            if(this.state.currentText !== undefined && this.state.currentText.split(" ").length > this.state.rebusArray.length){
+            /*if(this.state.currentText !== undefined && this.state.currentText.split(" ").length > this.state.rebusArray.length+1){
               var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
               this.state.rebusArray.push(rebusObjJSON);
               rebusObj.word = "";
@@ -328,15 +308,7 @@ class Main extends Component {
               rebusObj.left = "";
               rebusObj.rebus = "";
             }
-        }
-
-      //if there's additional part of the text that didn't much an emoji
-      //add it to the rebus
-
-      if(this.state.rebusArray.length>0 && this.state.rebusArray[this.state.rebusArray.length-1].nbSpace == rebusObj.nbSpace && !deleteMode){
-        var left = rebusObj.word.replace(this.state.rebusArray[this.state.rebusArray.length-1].word, "");
-        this.state.rebusArray[this.state.rebusArray.length-1].left = left;
-      }
+        }*/
 
       i++;
     }
@@ -389,12 +361,13 @@ class Main extends Component {
               rebusObj.delta = delta;
             }
 
-            if(this.state.rebusArray.length>0 && this.state.rebusArray[this.state.rebusArray.length-1].nbSpace == rebusObj.nbSpace && this.state.currentText.length >= this.state.previousText.length){
-                this.state.rebusArray.splice(-1,1);
-            }
             var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
-            this.state.rebusArray.push(rebusObjJSON);
-
+            if(this.state.rebusArray.length>0 && this.state.rebusArray[this.state.rebusArray.length-1].nbSpace == rebusObj.nbSpace && this.state.currentText.length >= this.state.previousText.length){
+              this.state.rebusArray.splice(rebusObj.i,1);
+              this.state.rebusArray.splice(rebusObj.i, 0, rebusObjJSON);
+            }else{
+              this.state.rebusArray.push(rebusObjJSON);
+            }
             break;
         }
       }
