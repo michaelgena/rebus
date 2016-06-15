@@ -3,37 +3,37 @@
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "Rebus29x2.png",
+      "filename" : "RebbyIcon29x2.png",
       "scale" : "2x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "Rebus29x3.png",
+      "filename" : "RebbyIcon29x3-1.png",
       "scale" : "3x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "Rebus40x2.png",
+      "filename" : "RebbyIcon40x2.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "Rebus60x2-1.png",
+      "filename" : "RebbyIcon60x2.png",
       "scale" : "3x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Rebus60x2.png",
+      "filename" : "RebbyIcon60x2-1.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Rebus60x3.png",
+      "filename" : "RebbyIcon60x3.png",
       "scale" : "3x"
     }
   ],

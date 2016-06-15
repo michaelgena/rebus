@@ -50,7 +50,14 @@ class Main extends Component {
        height: new Animated.Value(this.viewMaxHeight),
        hideShare: true
     };
+
+
   }
+
+
+
+
+
 
   buttonClicked() {
       dismissKeyboard();
@@ -96,6 +103,7 @@ class Main extends Component {
   }
 
   shareOnFacebook() {
+
     KDSocialShare.shareOnFacebook({
         'text':this.state.finalRebus,
         'link':'',
@@ -201,6 +209,7 @@ class Main extends Component {
       this.state.rebusArray = [];
       return "";
     }
+    text = text.replace(/ +(?= )/g,'');
     this.state.currentText = text;
     this.state.rebus = "";
     this.state.rebusArray = [];
@@ -235,17 +244,17 @@ class Main extends Component {
             rebusObj.word = rebusObj.word.substring(0,n);
             this.matchEmoji(rebusObj);
             if(rebusObj.rebus !== undefined && rebusObj.rebus.length > 0){
-              var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
-              this.state.rebusArray.splice(i,1);
-              this.state.rebusArray.push(rebusObjJSON);
-              rebusObj.word = "";
-              rebusObj.delta = "";
-              rebusObj.left = "";
-              rebusObj.prev = "";
-              rebusObj.rebus = "";
               break;
             }
           }
+          var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
+          this.state.rebusArray.splice(i,1);
+          this.state.rebusArray.push(rebusObjJSON);
+          rebusObj.word = "";
+          rebusObj.delta = "";
+          rebusObj.left = "";
+          rebusObj.prev = "";
+          rebusObj.rebus = "";
         }else{
           rebusObj.word = "";
           rebusObj.delta = "";
