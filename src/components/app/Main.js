@@ -181,8 +181,8 @@ class Main extends Component {
             value={this.state.text}
             onChangeText={(text) => this.setState({text})}
             controlled={true}
-            placeholder="Type your text here..."
-            autoCorrect={false}
+            placeholder="Your text here..."
+            autoCorrect={true}
             multiline={true}
             onFocus={this.inputFocused.bind(this)}
           />
@@ -201,18 +201,17 @@ class Main extends Component {
   }
 
   generate(text) {
+    this.state.rebus = "";
+    this.state.rebusArray = [];
     if(text.length == 0){
-      this.state.rebus = "";
       this.state.previousText = "";
       this.state.currentText = "";
       this.state.text = "";
-      this.state.rebusArray = [];
+
       return "";
     }
     text = text.replace(/ +(?= )/g,'');
     this.state.currentText = text;
-    this.state.rebus = "";
-    this.state.rebusArray = [];
     var rebusObj = {};
     var textArray = text.split(" ");
 
