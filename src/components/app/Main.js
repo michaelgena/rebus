@@ -1,5 +1,5 @@
 'use strict';
-import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight, ScrollView, PixelRatio, Animated, Navigator, Dimensions } from 'react-native';
+import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight, ScrollView, PixelRatio, Animated, Navigator, Dimensions, Platform } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Button from 'react-native-button';
 import dismissKeyboard from 'dismissKeyboard';
@@ -31,6 +31,9 @@ class Main extends Component {
     super(opts);
 
     let textInputHeight = 0;
+    if (Platform.OS === 'android'){
+      textInputHeight = 20;
+    }
     var STATUS_BAR_HEIGHT = Navigator.NavigationBar.Styles.General.StatusBarHeight;
     //console.log("STATUS_BAR_HEIGHT "+STATUS_BAR_HEIGHT);
     //console.log("Navigator.NavigationBar.Styles.General.NavBarHeight "+Navigator.NavigationBar.Styles.General.NavBarHeight);
@@ -48,16 +51,12 @@ class Main extends Component {
        rebusArray:[],
        language:0,
        height: new Animated.Value(this.viewMaxHeight),
-       hideShare: true
+       hideShare: true,
+       hideShareAndroid: true
     };
 
 
   }
-
-
-
-
-
 
   buttonClicked() {
       dismissKeyboard();
@@ -70,7 +69,11 @@ class Main extends Component {
   }
 
   inputFocused() {
-    this.state.hideShare = true;
+    if (Platform.OS === 'android'){
+      this.state.hideShareAndroid = true;
+    }else{
+      this.state.hideShare = true;
+    }
   }
 
   onKeyboardDidShow(e) {
@@ -122,9 +125,15 @@ class Main extends Component {
   }
 
   toggle = () => {
-        this.setState({
-            hideShare: !this.state.hideShare
-        });
+        if (Platform.OS === 'android'){
+          this.setState({
+              hideShareAndroid: !this.state.hideShareAndroid
+          });
+        }else{
+          this.setState({
+              hideShare: !this.state.hideShare
+          });
+        }
   };
 
   render() {
@@ -143,10 +152,14 @@ class Main extends Component {
           <Toggle hidden={this.state.hideShare}>
           <Text style={styles.rebus}> {this.state.rebus}</Text>
           </Toggle>
+          <Toggle hidden={this.state.hideShareAndroid}>
+          <Text style={styles.rebus}> {this.state.rebus}</Text>
+          </Toggle>
           <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
 
           <Toggle hidden={this.state.hideShare}>
             <View style={styles.shareContainer}>
+
               <TouchableHighlight onPress={this.tweet.bind(this)}>
                 <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
                  <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Twitter</Text>
@@ -161,9 +174,22 @@ class Main extends Component {
 
               <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
                 <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
-                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                  <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
                 </View>
               </TouchableHighlight>
+
+            </View>
+          </Toggle>
+
+          <Toggle hidden={this.state.hideShareAndroid}>
+            <View style={styles.shareContainer}>
+
+              <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
+                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
+                  <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                </View>
+              </TouchableHighlight>
+
             </View>
           </Toggle>
 
