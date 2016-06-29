@@ -240,7 +240,6 @@ class Main extends Component {
     this.state.currentText = text;
     var rebusObj = {};
     var textArray = text.split(" ");
-
     var i = 0;
 
     rebusObj.nbSpace = textArray.length - 1;
@@ -249,100 +248,95 @@ class Main extends Component {
         if(textArray[i] == ""){
           i++;
           rebusObj.word = "";
+          rebusObj.initialWord = "";
           rebusObj.delta = "";
           rebusObj.left = "";
+          rebusObj.prev = "";
           rebusObj.rebus = "";
           continue;
         }
         rebusObj.word = textArray[i];
+        rebusObj.initialWord = rebusObj.word;
         rebusObj.i = i;
         var char = rebusObj.word.toLowerCase().charAt(0);
 
-        //we are deleting values from the input
-
-        this.matchEmoji(rebusObj);
+        this.matchEmoji(rebusObj, true);
         if(rebusObj.rebus == undefined || rebusObj.rebus.length == 0){
-          //try to match the word by removing the last character each time
-          rebusObj.left = "";
-          for(var n=rebusObj.word.length-1; n>0; n--){
-            rebusObj.left = rebusObj.word.charAt(n)+rebusObj.left;
-            rebusObj.word = rebusObj.word.substring(0,n);
-            this.matchEmoji(rebusObj);
-            if(rebusObj.rebus !== undefined && rebusObj.rebus.length > 0){
-              break;
+          //Start to look for a match by removing the first letters
+          this.backwardMatch(rebusObj, true);
+
+          var delta = (rebusObj.delta !== undefined) ? rebusObj.delta.length : 0;
+          if(delta > 1 && rebusObj.initialWord.length > 3){
+            var rebusObjTemp1 = {};
+            var rebusObjTemp2 = {};
+
+            rebusObjTemp1.nbSpace = rebusObj.nbSpace;
+            rebusObjTemp1.word = rebusObj.initialWord;
+            rebusObjTemp2.nbSpace = rebusObj.nbSpace;
+            rebusObjTemp2.word = rebusObj.initialWord;
+
+            rebusObjTemp1.prev = rebusObjTemp1.word.charAt(0);
+            rebusObjTemp1.word = rebusObjTemp1.word.substring(1,rebusObjTemp1.word.length);
+            this.matchEmoji(rebusObjTemp1, false);
+            if(rebusObjTemp1.rebus == undefined || rebusObjTemp1.rebus.length == 0){
+              this.backwardMatch(rebusObjTemp1, false);
+            }
+            rebusObjTemp2.prev = rebusObjTemp2.word.substring(0,2);
+            rebusObjTemp2.word = rebusObjTemp2.word.substring(2,rebusObjTemp2.word.length);
+            this.matchEmoji(rebusObjTemp2, false);
+            if(rebusObjTemp2.rebus == undefined || rebusObjTemp2.rebus.length == 0){
+              this.backwardMatch(rebusObjTemp2, false);
+            }
+
+            if(rebusObjTemp1.rebus !== undefined && rebusObjTemp1.rebus.length > 0 && rebusObjTemp2.rebus !== undefined && rebusObjTemp2.rebus.length > 0){
+              var delta1 = (rebusObjTemp1.delta !== undefined) ? rebusObjTemp1.delta.length : 1;
+              var delta2 = (rebusObjTemp2.delta !== undefined) ? rebusObjTemp2.delta.length : 2;
+              if (delta1 < delta2 && delta1 < delta){
+                rebusObj.word = rebusObj.initialWord;
+                rebusObj.delta = rebusObjTemp1.delta;
+                rebusObj.rebus = rebusObjTemp1.rebus;
+                rebusObj.prev = rebusObjTemp1.prev;
+                rebusObj.left = rebusObjTemp1.left;
+              }
+              if (delta2 < delta1 && delta2 < delta){
+                rebusObj.word = rebusObj.initialWord;
+                rebusObj.delta = rebusObjTemp2.delta;
+                rebusObj.rebus = rebusObjTemp2.rebus;
+                rebusObj.prev = rebusObjTemp2.prev;
+                rebusObj.left = rebusObjTemp2.left;
+              }
             }
           }
+          //End
+
           var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
           this.state.rebusArray.splice(i,1);
           this.state.rebusArray.push(rebusObjJSON);
           rebusObj.word = "";
+          rebusObj.initialWord = "";
           rebusObj.delta = "";
           rebusObj.left = "";
           rebusObj.prev = "";
           rebusObj.rebus = "";
         }else{
           rebusObj.word = "";
+          rebusObj.initialWord = "";
           rebusObj.delta = "";
           rebusObj.left = "";
+          rebusObj.prev = "";
           rebusObj.rebus = "";
         }
-        /*}else{
-            this.matchEmoji(rebusObj);
-            /*var delta = (rebusObj.delta !== undefined) ? rebusObj.delta.length : 0;
-            if(delta > 1 && rebusObj.word.length > 3){
-              var rebusObjTemp1,rebusObjTemp2 = {};
 
-              rebusObjTemp1.nbSpace = rebusObj.nbSpace;
-              rebusObjTemp1.word = rebusObj.word;
-              rebusObjTemp2.nbSpace = rebusObj.nbSpace;
-              rebusObjTemp2.word = rebusObj.word;
-
-              rebusObjTemp1.prev = rebusObjTemp1.word.charAt(0);
-              rebusObjTemp1.word = rebusObjTemp1.word.substring(1,rebusObjTemp1.word.length);
-              this.matchEmoji(rebusObjTemp1);
-
-              rebusObjTemp2.prev = rebusObjTemp2.word.substring(0,1);
-              rebusObjTemp2.word = rebusObjTemp2.word.substring(2,rebusObjTemp2.word.length);
-              this.matchEmoji(rebusObjTemp2);
-
-              if(rebusObjTemp1.rebus !== undefined && rebusObjTemp1.rebus.length > 0 && rebusObjTemp2.rebus !== undefined && rebusObjTemp2.rebus.length > 0){
-                var delta1 = (rebusObjTemp1.delta !== undefined) ? rebusObjTemp1.delta.length+1 : 1;
-                var delta2 = (rebusObjTemp2.delta !== undefined) ? rebusObjTemp2.delta.length+2 : 2;
-                if (delta1 < delta2 && delta1 < delta){
-                  rebusObj.word = rebusObjTemp1.word;
-                  rebusObj.delta = rebusObjTemp1.delta;
-                  rebusObj.rebus = rebusObjTemp1.rebus;
-                  rebusObj.prev = rebusObjTemp1.prev;
-                  rebusObj.left = rebusObjTemp1.left;
-                }
-                if (delta2 < delta1 && delta2 < delta){
-                  rebusObj.word = rebusObjTemp2.word;
-                  rebusObj.delta = rebusObjTemp2.delta;
-                  rebusObj.rebus = rebusObjTemp2.rebus;
-                  rebusObj.prev = rebusObjTemp2.prev;
-                  rebusObj.left = rebusObjTemp2.left;
-                }
-              }
-            }
-            var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
-            this.state.rebusArray.push(rebusObjJSON);
-            rebusObj.word = "";
-            rebusObj.delta = "";
-            rebusObj.left = "";
-            rebusObj.prev = "";
-            rebusObj.rebus = "";
-            */
-
-            //If we didn't match anything
-            /*if(this.state.currentText !== undefined && this.state.currentText.split(" ").length > this.state.rebusArray.length+1){
-              var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
-              this.state.rebusArray.push(rebusObjJSON);
-              rebusObj.word = "";
-              rebusObj.delta = "";
-              rebusObj.left = "";
-              rebusObj.rebus = "";
-            }
-        }*/
+        if(this.state.currentText.length >= this.state.previousText.length){
+          var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
+          this.state.rebusArray.push(rebusObjJSON);
+        }
+        rebusObj.word = "";
+        rebusObj.initialWord = "";
+        rebusObj.delta = "";
+        rebusObj.left = "";
+        rebusObj.prev = "";
+        rebusObj.rebus = "";
 
       i++;
     }
@@ -361,7 +355,7 @@ class Main extends Component {
       }
       if(this.state.rebusArray[r].left !== undefined && this.state.rebusArray[r].left.length>0){
         if(this.state.rebusArray[r].delta !== undefined && this.state.rebusArray[r].delta.length>0){
-          this.state.rebus += this.state.rebusArray[r].delta+"="+this.state.rebusArray[r].left;
+          this.state.rebus += "-"+this.state.rebusArray[r].delta+"+"+this.state.rebusArray[r].left;
         }else{
           this.state.rebus += this.state.rebusArray[r].left;
         }
@@ -375,42 +369,53 @@ class Main extends Component {
     return this.state.rebus;
   }
 
-  matchEmoji(rebusObj) {
-    if(rebusObj.word.length == 0 || rebusObj.word.toLowerCase().charAt(0) == ""){
-      return rebusObj;
+  matchEmoji(obj, autoSave) {
+    if(obj.word.length == 0 || obj.word.toLowerCase().charAt(0) == ""){
+      return obj;
     }
-    var char = rebusObj.word.toLowerCase().charAt(0);
+    var char = obj.word.toLowerCase().charAt(0);
     if(/^[A-Za-z\u00C0-\u017F]+$/.test(char)){
       char = char.latinize();
       var foundMatch = false;
       var json = this.state.language == 1 ? jsonFR : jsonEN;
       for(var j = 0; j < json[char].length; j++){
-        if(json[char][j].name.startsWith(rebusObj.word.toLowerCase().latinize()) == true){
+        if(json[char][j].name.startsWith(obj.word.toLowerCase().latinize()) == true){
             //are we building the rebus on the go
 
-            rebusObj.rebus = json[char][j].value;
+            obj.rebus = json[char][j].value;
 
-            var delta = json[char][j].name.replace(rebusObj.word.toLowerCase().latinize(), "");
+            var delta = json[char][j].name.replace(obj.word.toLowerCase().latinize(), "");
             if(delta.length>0){
-              rebusObj.delta = delta;
+              obj.delta = delta;
             }
-
-            var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
-            if(this.state.rebusArray.length>0 && this.state.rebusArray[this.state.rebusArray.length-1].nbSpace == rebusObj.nbSpace && this.state.currentText.length >= this.state.previousText.length){
-              this.state.rebusArray.splice(rebusObj.i,1);
-              this.state.rebusArray.splice(rebusObj.i, 0, rebusObjJSON);
-            }else{
-              this.state.rebusArray.push(rebusObjJSON);
+            if(autoSave){
+              var rebusObjJSON = JSON.parse(JSON.stringify(obj));
+              if(this.state.rebusArray.length>0 && this.state.rebusArray[this.state.rebusArray.length-1].nbSpace == obj.nbSpace && this.state.currentText.length >= this.state.previousText.length){
+                this.state.rebusArray.splice(obj.i,1);
+                this.state.rebusArray.splice(obj.i, 0, rebusObjJSON);
+              }else{
+                this.state.rebusArray.push(rebusObjJSON);
+              }
             }
             break;
         }
       }
     }
+    return obj;
+  }
 
-
-
-
-    return rebusObj;
+  backwardMatch(obj, autoSave){
+    obj.left = "";
+    obj.initialWord = obj.word;
+    for(var n=obj.word.length-1; n>0; n--){
+      obj.left = obj.word.charAt(n)+obj.left;
+      obj.word = obj.word.substring(0,n);
+      this.matchEmoji(obj, autoSave);
+      if(obj.rebus !== undefined && obj.rebus.length > 0){
+        break;
+      }
+    }
+    return obj;
   }
 }
 
