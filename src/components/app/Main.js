@@ -9,6 +9,9 @@ import Radio, {RadioButton} from 'react-native-simple-radio-button';
 var KDSocialShare = require('NativeModules').KDSocialShare;
 import Toggle from 'react-native-toggle';
 
+var MessageBarAlert = require('react-native-message-bar').MessageBar;
+var MessageBarManager = require('react-native-message-bar').MessageBarManager;
+
 var dataEN = require("../../data/EN.js");
 var dataFR = require("../../data/FR.js");
 var jsonEN = dataEN.get();
@@ -58,6 +61,16 @@ class Main extends Component {
 
   }
 
+  componentDidMount() {
+    MessageBarManager.registerMessageBar(this.refs.alert);
+  }
+
+  componentWillUnmount() {
+    MessageBarManager.unregisterMessageBar();
+  }
+
+
+
   buttonClicked() {
       dismissKeyboard();
 
@@ -95,9 +108,7 @@ class Main extends Component {
     KDSocialShare.tweet({
         'text':this.state.finalRebus,
         'link':'',
-        //'imagelink':'',
-        //or use image
-        'image': 'RebusIcon.png',
+        'imagelink':'https://lh3.googleusercontent.com/Dffl5I2uYfuNhNeT2pMkHzJWjn99lz1uox4dEjRtwXA9OO5sO81h-oO8jmSkOFFFj3vwb7r7Z_qpIsoC3EKtTKc1M1MR',
       },
       (results) => {
         console.log(results);
@@ -110,9 +121,7 @@ class Main extends Component {
     KDSocialShare.shareOnFacebook({
         'text':this.state.finalRebus,
         'link':'',
-        //'imagelink':'',
-        //or use image
-        'image': 'RebusIcon.png',
+        'imagelink':'https://lh3.googleusercontent.com/Dffl5I2uYfuNhNeT2pMkHzJWjn99lz1uox4dEjRtwXA9OO5sO81h-oO8jmSkOFFFj3vwb7r7Z_qpIsoC3EKtTKc1M1MR',
       },
       (results) => {
         console.log(results);
@@ -122,6 +131,18 @@ class Main extends Component {
 
   copyToClipboard(){
     Clipboard.set(this.state.finalRebus);
+    MessageBarManager.showAlert({
+      alertType: "info",
+      //stylesheetInfo : {styles.info},
+      title: "Copied in your clipboard.",
+      //message: "It's in your clipboard now!",
+      //avatar: "require('../../img/rebbot.png')",
+      titleNumberOfLines: 1,
+      messageNumberOfLines: 0,
+      /*titleStyle: {{ color: 'white', fontSize: 18, fontWeight: 'bold' }},
+      messageStyle: {{ color: 'white', fontSize: 16 }},
+      avatarStyle: {{ height: 40, width: 40, borderRadius: 20 }},*/
+    });
   }
 
   toggle = () => {
@@ -144,12 +165,14 @@ class Main extends Component {
           justifyContent: 'flex-end'
         }}
       >
+
       <View style={styles.container}>
           <ScrollView
           onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
           onKeyboardDidHide={this.onKeyboardDidHide.bind(this)}
           >
           <Toggle hidden={this.state.hideShare}>
+
           <Text style={styles.rebus}> {this.state.rebus}</Text>
           </Toggle>
           <Toggle hidden={this.state.hideShareAndroid}>
@@ -222,6 +245,8 @@ class Main extends Component {
 
         </View>
         </View>
+        <MessageBarAlert ref="alert" />
+
       </Animated.View>
     );
   }
@@ -488,6 +513,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 5,
     marginRight: 5
+  },
+  info:{
+    backgroundColor : '#007bff'
   }
 })
 

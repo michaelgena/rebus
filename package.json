@@ -28,6 +28,7 @@
     "react-native-drawer": "^2.0.0",
     "react-native-fbsdk": "^0.2.1",
     "react-native-keyboard-aware-scroll-view": "^0.1.0",
+    "react-native-message-bar": "^1.6.0",
     "react-native-router-flux": "^3.2.5",
     "react-native-share": "^1.0.11",
     "react-native-simple-radio-button": "^2.1.0",
