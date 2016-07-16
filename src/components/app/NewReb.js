@@ -1,5 +1,5 @@
 'use strict';
-import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight, ScrollView, PixelRatio, Animated, Navigator, Dimensions, Platform } from 'react-native';
+import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight, ScrollView, PixelRatio, Animated, Navigator, Dimensions, Platform, AsyncStorage, } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Button from 'react-native-button';
 import dismissKeyboard from 'dismissKeyboard';
@@ -28,10 +28,10 @@ var radio_props = [
   {label: 'FR', value: 1 }
 ];
 
-class Main extends Component {
+class NewReb extends Component {
 
-  constructor(opts) {
-    super(opts);
+  constructor(props) {
+    super(props);
 
     let textInputHeight = 0;
     if (Platform.OS === 'android'){
@@ -46,11 +46,11 @@ class Main extends Component {
     //console.log("initial this.viewMaxHeight "+this.viewMaxHeight);
 
     this.state = {
-       text: "",
-       rebus:"",
+       text:this.props.text != null ? this.props.text : "",
+       rebus:this.props.rebus != null ? this.props.rebus : "",
        finalRebus:"",
-       previousText:"",
-       currentText:"",
+       previousText:this.props.text != null ? this.props.text : "",
+       currentText:this.props.text != null ? this.props.text : "",
        rebusArray:[],
        language:0,
        height: new Animated.Value(this.viewMaxHeight),
@@ -73,12 +73,36 @@ class Main extends Component {
 
   buttonClicked() {
       dismissKeyboard();
+      if(this.state.rebus != ""){
+        var reb = {};
+        reb.text = this.state.text;
+        reb.rebus = this.state.rebus;
+        reb.date = Date.now();
 
-      this.state.finalRebus = this.state.rebus;
-      this.state.text = "";
-      if(this.state.finalRebus !== ""){
+        this.state.finalRebus = this.state.rebus;
+        this.state.text = "";
+        //if(this.state.finalRebus !== ""){
         this.toggle();
+        //}
+
+        var rebAsString = JSON.stringify(reb);
+        rebAsString = rebAsString.replace(/,/g , "|");
+        rebAsString = rebAsString.replace(/"/g , "\\\"");
+
+        AsyncStorage.getItem("myRebs")
+        .then((rebs) => {
+          if(rebs !== null){
+            rebs = rebs.split(",");
+            rebs.unshift(rebAsString);
+            AsyncStorage.setItem("myRebs", rebs.toString());
+          }else{
+            var rebs = [];
+            rebs.push(rebAsString);
+            AsyncStorage.setItem("myRebs", rebs.toString());
+          }
+        }).done();
       }
+
   }
 
   inputFocused() {
@@ -108,7 +132,7 @@ class Main extends Component {
     KDSocialShare.tweet({
         'text':this.state.finalRebus,
         'link':'',
-        'imagelink':'https://lh3.googleusercontent.com/Dffl5I2uYfuNhNeT2pMkHzJWjn99lz1uox4dEjRtwXA9OO5sO81h-oO8jmSkOFFFj3vwb7r7Z_qpIsoC3EKtTKc1M1MR',
+        'imagelink':'',
       },
       (results) => {
         console.log(results);
@@ -130,6 +154,7 @@ class Main extends Component {
   }
 
   copyToClipboard(){
+
     Clipboard.set(this.state.finalRebus);
     MessageBarManager.showAlert({
       alertType: "info",
@@ -171,14 +196,14 @@ class Main extends Component {
           onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
           onKeyboardDidHide={this.onKeyboardDidHide.bind(this)}
           >
+          <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
           <Toggle hidden={this.state.hideShare}>
 
-          <Text style={styles.rebus}> {this.state.rebus}</Text>
+          <Text style={styles.rebus}> {this.state.finalRebus}</Text>
           </Toggle>
           <Toggle hidden={this.state.hideShareAndroid}>
-          <Text style={styles.rebus}> {this.state.rebus}</Text>
+          <Text style={styles.rebus}> {this.state.finalRebus}</Text>
           </Toggle>
-          <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
 
           <Toggle hidden={this.state.hideShare}>
             <View style={styles.shareContainer}>
@@ -449,10 +474,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FDF058',
-    paddingTop: 30
+    backgroundColor: '#FDF058'
   },
   input:{
     height: 50,
@@ -519,4 +541,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Main;
+export default NewReb;

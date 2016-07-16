@@ -1,13 +1,11 @@
-'use strict';
-
 import React, { AppRegistry, Component } from 'react-native'
-//import Root from './src/Root';
-import Main from './src/components/app/Main';
+import Root from './src/Root';
+import NewReb from './src/components/app/NewReb';
 
 class Rebus extends Component {
   render() {
     return (
-      <Main />
+      <Root/>
     );
   }
 }

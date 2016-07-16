@@ -1,48 +1,43 @@
 'use strict';
-import React, { Component, StyleSheet } from 'react-native';
-import { Actions, Scene, Router, Reducer } from 'react-native-router-flux';
+import React, { Component, NavigatorIOS, StyleSheet } from 'react-native';
 
-import loginInfo from './utils/loginInfo';
-import Drawer from './components/drawer/Drawer';
-import Splash from './components/Splash';
-import Login from './components/Login';
-import Main from './components/app/Main';
+import RebList from './components/app/RebList';
+import NewReb from './components/app/NewReb';
 
-const DRAWER_IMAGE = require('./img/drawer_menu.png');
-const BACK_BUTTON_IMAGE = require('./img/back.png');
+class Root extends Component{
 
-//let nuxeo;
-function reducerCreate(params) {
-  const defaultReducer = Reducer(params);
-  return (state, action) => {
-    return defaultReducer(state, action);
-  }
-};
-
-class Root extends Component {
   render() {
-    return <Router createReducer={reducerCreate} navigationBarStyle={styles.navbar} titleStyle={styles.title}>
-      <Scene key="root" hideNavBar={true}>
-        <Scene key="splash" component={Splash} initial={true} title="Splash" />
-        <Scene key="login" component={Login} type="replace" title="Login" />
-        <Scene key="app" component={Drawer} type="replace">
-          <Scene key="main">
-            <Scene key="main" component={Main} initial={true} title='Rebus' />
-          </Scene>
-        </Scene>
-      </Scene>
-    </Router>
+    return (
+      <NavigatorIOS
+        ref="nav"
+        style={styles.container}
+        initialRoute={{
+          title: 'Home',
+          component: RebList,
+          passProps: this.props,
+          rightButtonTitle: "New",
+          onRightButtonPress: () => {
+            this.refs.nav.navigator.push({
+              title: "New",
+              component: NewReb,
+              rightButtonTitle: 'Cancel',
+              onRightButtonPress: () => { this.refs.nav.navigator.pop(); }
+            });}
+        }}
+
+        itemWrapperStyle={styles.itemWrapper}
+        />
+    );
   }
 }
-
-const styles = StyleSheet.create({
-  title: {
-    color: '#000000',
-  },
-  navbar: {
-    backgroundColor: '#FDF058',
-    borderBottomColor: 'transparent',
-  }
-});
-
-export default Root;
+var styles = StyleSheet.create({
+    container: {
+      flex:1,
+      backgroundColor: '#FDF058',
+    },
+    itemWrapper: {
+      flex: 1,
+    }
+  });
+//export default Root;
+module.exports = Root;
