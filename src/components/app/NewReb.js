@@ -1,5 +1,5 @@
 'use strict';
-import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight, ScrollView, PixelRatio, Animated, Navigator, Dimensions, Platform, AsyncStorage, } from 'react-native';
+import React, { Component, View, Text, StyleSheet,TextInput,TouchableHighlight, ScrollView, PixelRatio, Animated, Navigator, Dimensions, Platform, AsyncStorage, ToolbarAndroid} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Button from 'react-native-button';
 import dismissKeyboard from 'dismissKeyboard';
@@ -38,12 +38,8 @@ class NewReb extends Component {
       textInputHeight = 20;
     }
     var STATUS_BAR_HEIGHT = Navigator.NavigationBar.Styles.General.StatusBarHeight;
-    //console.log("STATUS_BAR_HEIGHT "+STATUS_BAR_HEIGHT);
-    //console.log("Navigator.NavigationBar.Styles.General.NavBarHeight "+Navigator.NavigationBar.Styles.General.NavBarHeight);
-    //this.viewMaxHeight = Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT -textInputHeight;
     this.viewMaxHeight = Dimensions.get('window').height - textInputHeight;
     this.viewMaxWidth = Dimensions.get('window').width
-    //console.log("initial this.viewMaxHeight "+this.viewMaxHeight);
 
     this.state = {
        text:this.props.text != null ? this.props.text : "",
@@ -52,13 +48,11 @@ class NewReb extends Component {
        previousText:this.props.text != null ? this.props.text : "",
        currentText:this.props.text != null ? this.props.text : "",
        rebusArray:[],
-       language:0,
+       language:this.props.language != null ? this.props.language : 0,
        height: new Animated.Value(this.viewMaxHeight),
        hideShare: true,
        hideShareAndroid: true
     };
-
-
   }
 
   componentDidMount() {
@@ -69,8 +63,6 @@ class NewReb extends Component {
     MessageBarManager.unregisterMessageBar();
   }
 
-
-
   buttonClicked() {
       dismissKeyboard();
       if(this.state.rebus != ""){
@@ -78,12 +70,11 @@ class NewReb extends Component {
         reb.text = this.state.text;
         reb.rebus = this.state.rebus;
         reb.date = Date.now();
+        reb.language = this.state.language;
 
         this.state.finalRebus = this.state.rebus;
         this.state.text = "";
-        //if(this.state.finalRebus !== ""){
         this.toggle();
-        //}
 
         var rebAsString = JSON.stringify(reb);
         rebAsString = rebAsString.replace(/,/g , "|");
@@ -102,7 +93,6 @@ class NewReb extends Component {
           }
         }).done();
       }
-
   }
 
   inputFocused() {
@@ -158,15 +148,9 @@ class NewReb extends Component {
     Clipboard.set(this.state.finalRebus);
     MessageBarManager.showAlert({
       alertType: "info",
-      //stylesheetInfo : {styles.info},
       title: "Copied in your clipboard.",
-      //message: "It's in your clipboard now!",
-      //avatar: "require('../../img/rebbot.png')",
       titleNumberOfLines: 1,
       messageNumberOfLines: 0,
-      /*titleStyle: {{ color: 'white', fontSize: 18, fontWeight: 'bold' }},
-      messageStyle: {{ color: 'white', fontSize: 16 }},
-      avatarStyle: {{ height: 40, width: 40, borderRadius: 20 }},*/
     });
   }
 
@@ -192,6 +176,13 @@ class NewReb extends Component {
       >
 
       <View style={styles.container}>
+          <View>
+            <ToolbarAndroid style={styles.toolbar}
+                        title={this.props.title}
+                        navIcon={require('./ic_arrow_back_white_24dp.png')}
+                        onIconClicked={this.props.navigator.pop}
+                        titleColor={'black'}/>
+          </View>
           <ScrollView
           onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
           onKeyboardDidHide={this.onKeyboardDidHide.bind(this)}
@@ -247,7 +238,7 @@ class NewReb extends Component {
 
           <Radio
             radio_props={radio_props}
-            initial={0}
+            initial={this.state.language}
             onPress={(value) => {this.setState({language:value})}}
           />
 
@@ -358,7 +349,6 @@ class NewReb extends Component {
             }
           }
           //End
-
           var rebusObjJSON = JSON.parse(JSON.stringify(rebusObj));
           this.state.rebusArray.splice(i,1);
           this.state.rebusArray.push(rebusObjJSON);
@@ -534,10 +524,15 @@ const styles = StyleSheet.create({
     fontSize: 30,
     alignSelf: 'flex-start',
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
+    color: 'black'
   },
   info:{
     backgroundColor : '#007bff'
+  },
+  toolbar: {
+    backgroundColor: '#FDF058',
+    height: 56,
   }
 })
 

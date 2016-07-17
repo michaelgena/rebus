@@ -1,6 +1,6 @@
 'use strict';
-import React, { Component, View, Text, StyleSheet,ListView,TouchableHighlight,ActivityIndicatorIOS, AsyncStorage } from 'react-native';
-
+import React, { Component, View, Text, StyleSheet,ListView,TouchableHighlight,ActivityIndicatorIOS, AsyncStorage, Platform, ToolbarAndroid, Dimensions, RefreshControl, Image, ScrollView, Animated } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Reb from './Reb';
 import NewReb from './NewReb';
 
@@ -10,18 +10,18 @@ var styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#FFFFFF',
-      paddingTop: 30
-    },
-    rightContainer: {
-        flex: 1,
-				backgroundColor: '#FDF058',
+      backgroundColor: '#FDF058',
+      paddingTop: Platform.OS === 'android' ? 0 : 30,
     },
     title: {
         fontSize: 20,
         marginLeft: 5,
         marginRight: 5,
-        marginBottom: 0
+        marginBottom: 0,
+        color: 'black',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     content: {
         color: '#656565',
@@ -33,7 +33,9 @@ var styles = StyleSheet.create({
    	},
    	listView: {
        backgroundColor: '#FFFFFF',
-			 marginTop: 65
+			 marginTop: Platform.OS === 'android' ? 0 : 65,
+       flex: 1,
+       flexDirection: 'column',
    },
    loading: {
        flex: 1,
@@ -42,100 +44,328 @@ var styles = StyleSheet.create({
    },
    rebus: {
      fontSize: 30,
-     alignSelf: 'flex-start',
+     alignSelf: 'stretch',
      marginLeft: 5,
-     marginRight: 5
-   }
+     marginRight: 5,
+     color: 'black'
+   },
+   toolbar: {
+     backgroundColor: '#FFFFFF',
+     height: 56,
+     alignItems: 'center'
+   },
+   image: {
+      height: 60,
+      width: 60,
+      borderRadius: 30,
+      margin: 5
+    },
+    nickname:{
+      fontSize: 20,
+      marginTop: 30,
+      color: 'black',
+      flex: 1
+    },
+    message: {
+      fontSize: 16,
+      borderRadius: 15,
+      paddingLeft: 14,
+      paddingRight: 14,
+      paddingBottom: 10,
+      paddingTop: 8,
+      marginRight: Platform.OS === 'android' ? 15 : 5,
+      color: 'black',
+      justifyContent: 'center',
+      backgroundColor: '#FDF058',
+    },
+    messageContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        marginTop: Platform.OS === 'android' ? 0 : 65,
+    },
 });
+
+var toolbarActions = [
+  {title: 'New', show: 'always'}
+];
 
 class RebList extends Component {
 
 	constructor(props) {
-       super(props);
+    super(props);
 
-       this.state = {
-       		isLoading: true,
-          reloading: false,
-          dataSource: new ListView.DataSource({
-        		rowHasChanged: (row1, row2) => row1 !== row2
-        	})
-       };
-			 this._currentPageIndex = 0;
-	     this._hasNextPage = true;
-	     this._isFetching = false;
-			 this._entries = [];
-   	}
+     this.state = {
+     		isLoading: true,
+        reloading: false,
+        nbItems: 0,
+        isOnBoarding: true,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height-20,
+        dataSource: new ListView.DataSource({
+      		rowHasChanged: (row1, row2) => row1 !== row2
+      	})
+     };
+		 this._currentPageIndex = 0;
+	   this._hasNextPage = true;
+	   this._isFetching = false;
+		 this._entries = [];
+  }
 
-    renderHeader() {
-    if (this.state.reloading) {
-      return (
-        <View style={styles.loading}>
-          <ActivityIndicatorIOS size='small' />
-        </View>
-      )
-    } else {
-      return null
+  render() {
+    //AsyncStorage.removeItem("myRebs");
+    //AsyncStorage.removeItem("isOnBoarding");
+    if (this.state.isLoading) {
+         return this.renderLoadingView();
     }
-    }
-    render() {
-      //AsyncStorage.removeItem("myRebs");
-    	if (this.state.isLoading) {
-           return this.renderLoadingView();
+    else if(this.state.isOnBoarding){
+      if (Platform.OS === 'android'){
+        return (
+          <Animated.View
+            style={{
+              height: this.state.height,
+              justifyContent: 'flex-start'
+            }}
+          >
+
+            <ToolbarAndroid style={styles.toolbar}
+                  title="Home"
+                  titleColor={'black'}
+                  actions={toolbarActions}
+                  onActionSelected={this._onActionSelected.bind(this)}/>
+                  <ScrollView>
+                  <View style={styles.messageContainer}>
+                    <View style={{flex:1, flexDirection: 'row',}}>
+                      <Image style={styles.image} source={require('../../img/rebbot.png')}/>
+                    </View>
+
+                    <View style={{flex:1, flexDirection: 'row',}}>
+                      <View style={{width:60}}/>
+                      <View style={{flex:1, flexDirection: 'column',}}>
+                        <Text style={styles.message}>Hi! I'm Rebbot. I'm here to help you use Rebby.</Text>
+                      </View>
+                    </View>
+
+                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+                    <View style={{flex:1, flexDirection: 'row',}}>
+                      <View style={{width:60}}/>
+                      <View style={{flex:1, flexDirection: 'column',}}>
+                        <Text style={styles.message}>To start creating a Rebus press on the New button above.</Text>
+                      </View>
+                    </View>
+
+                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+                    <View style={{flex:1, flexDirection: 'row',}}>
+                      <View style={{width:60}}/>
+                      <View style={{flex:1, flexDirection: 'column',}}>
+                        <Text style={styles.message}>Type your text and press Done. You can then copy/paste it and share it with your friends.</Text>
+                      </View>
+                    </View>
+
+                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+                    <View style={{flex:1, flexDirection: 'row',}}>
+                      <View style={{width:60}}/>
+                      <View style={{flex:1, flexDirection: 'column',}}>
+                        <Text style={styles.message}>One last thing. You can browse back into your Rebus history from the Home page.</Text>
+                      </View>
+                    </View>
+
+                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+                    <View style={{flex:1, flexDirection: 'row'}}>
+                      <View style={{width:60}}/>
+                      <View style={{flex:1, flexDirection: 'column',}}>
+                        <Text style={styles.message}>H🅰ve ⛽-el+n! ♥ </Text>
+                      </View>
+                    </View>
+
+                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+                  </View>
+                  </ScrollView>
+                  <TouchableHighlight onPress={() => this.doneOnBoarding()}>
+                    <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
+                      <Text style={{color:'#ffffff',fontWeight:'800',}}>Got it!</Text>
+                    </View>
+                  </TouchableHighlight>
+
+          </Animated.View>
+        );
+      }else{
+        return (
+          <View style={styles.messageContainer}>
+            <View style={{flex:1, flexDirection: 'row',}}>
+              <Image style={styles.image} source={require('../../img/rebbot.png')}/>
+            </View>
+
+            <View style={{flex:1, flexDirection: 'row',}}>
+              <View style={{width:60}}/>
+              <View style={{flex:1, flexDirection: 'column',}}>
+                <Text style={styles.message}>Hi! I'm Rebbot. I'm here to help you use Rebby.</Text>
+              </View>
+            </View>
+
+            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+            <View style={{flex:1, flexDirection: 'row',}}>
+              <View style={{width:60}}/>
+              <View style={{flex:1, flexDirection: 'column',}}>
+                <Text style={styles.message}>To start creating a Rebus press on the New button above.</Text>
+              </View>
+            </View>
+
+            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+            <View style={{flex:1, flexDirection: 'row',}}>
+              <View style={{width:60}}/>
+              <View style={{flex:1, flexDirection: 'column',}}>
+                <Text style={styles.message}>Type your text and press Done. You can then copy/paste it and share it with your friends.</Text>
+              </View>
+            </View>
+
+            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+            <View style={{flex:1, flexDirection: 'row'}}>
+              <View style={{width:60}}/>
+              <View style={{flex:1, flexDirection: 'column',}}>
+                <Text style={styles.message}>One last thing. You can browse back into your Rebus history from the Home page.</Text>
+              </View>
+            </View>
+
+            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+            <View style={{flex:1, flexDirection: 'row'}}>
+              <View style={{width:60}}/>
+              <View style={{flex:1, flexDirection: 'column',}}>
+                <Text style={styles.message}>H🅰ve ⛽-el+n! ♥ </Text>
+              </View>
+            </View>
+
+            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+
+            <TouchableHighlight onPress={() => this.doneOnBoarding()}>
+              <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
+                <Text style={{color:'#ffffff',fontWeight:'800',}}>Got it!</Text>
+              </View>
+            </TouchableHighlight>
+
+          </View>
+        );
       }
+    }
 
-    	return (
+    if (Platform.OS === 'android'){
+      return (
+
+          <View style={{flex: 1}}>
+            <ToolbarAndroid style={styles.toolbar}
+                    title="Home"
+                    titleColor={'black'}
+                    actions={toolbarActions}
+                    onActionSelected={this._onActionSelected.bind(this)}/>
+          <View style={styles.container}>
        		<ListView
+              refreshControl={
+                <RefreshControl
+                refreshing={this.state.reloading}
+                onRefresh={this._onRefresh.bind(this)}/>
+              }
             	dataSource={this.state.dataSource}
             	renderRow={this.renderRebus.bind(this)}
-							onEndReached={this._onEndReached.bind(this)}
-              onScroll={this.handleScroll.bind(this)}
-              renderHeader={this.renderHeader.bind(this)}
+  						onEndReached={this._onEndReached.bind(this)}
             	style={styles.listView}
             	/>
-    	);
+          </View>
+        </View>
+      );
+    }else{
+      return (
+     		<ListView
+            refreshControl={
+              <RefreshControl
+              refreshing={this.state.reloading}
+              onRefresh={this._onRefresh.bind(this)}/>
+            }
+          	dataSource={this.state.dataSource}
+          	renderRow={this.renderRebus.bind(this)}
+						onEndReached={this._onEndReached.bind(this)}
+          	style={styles.listView}
+          	/>
+      );
+    }
 	}
 
 	renderLoadingView() {
-    return (
+    if (Platform.OS === 'ios'){
+      return (
       	<View style={styles.loading}>
-         	 <ActivityIndicatorIOS
-         	     size='large'/>
+          <Spinner size='large' visible={true} overlayColor="#FDF058"/>
       	</View>
-  	);
+  	  );
+    }else{
+      return null;
+    }
 	}
 
 	renderRebus(rebus) {
+    if(this.state.nbItems == 0){
+      console.log("Empty");
+      return (
+  					<View style={{flex:1}}>
+  							 <View style={{alignItems: 'center',justifyContent:'center', width: this.state.width, height: 50,backgroundColor:'#CCCCCC'}}>
+  									<Text style={{color:'#ffffff',fontWeight:'800',}} numberOfLines={1}>No history to display for now. Pull to refresh.</Text>
+  							</View>
+  							<View style={styles.separator} />
+  					</View>
+  		);
+    }
+
     rebus = rebus.replace(/\|/g , ",");
     rebus = rebus.replace(/\\"/g , "\"");
-    console.log("rebus:"+rebus);
+    //console.log("rebus:"+rebus);
     var reb = JSON.parse(rebus);
 		return (
-					<TouchableHighlight onPress={ () => this.navReb(reb)} underlayColor='#dddddd'>
-							<View>
-									 <View style={styles.rightContainer}>
-											<Text style={styles.rebus} numberOfLines={1}>{reb.rebus}</Text>
-									</View>
-									<View style={styles.separator} />
+  		<TouchableHighlight onPress={ () => this.navReb(reb)} underlayColor="#dddddd">
+					<View>
+							 <View style={{	backgroundColor: '#FDF058', width: this.state.width}}>
+									<Text style={styles.rebus} numberOfLines={1}>{reb.rebus}</Text>
 							</View>
-					</TouchableHighlight>
+							<View style={styles.separator} />
+					</View>
+			</TouchableHighlight>
 		);
-   }
+  }
 
-   componentDidMount() {
-    	this.fetchData();
+  componentDidMount() {
+    AsyncStorage.getItem("isOnBoarding").then((value) => {
+      console.log("AsyncStorage:"+value);
+      if(value !== null && value === "false"){
+        this.state.isOnBoarding = false;
+      }
+    }).done();
+    this.fetchData();
   }
 
   fetchData() {
     AsyncStorage.getItem("myRebs").then((rebs) => {
+      //console.log("Rebs: "+rebs);
       if(rebs !== null){
         rebs = rebs.split(",");
+        this.state.nbItems = rebs.length;
+        console.log("Rebs Length: "+this.state.nbItems);
+
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(rebs),
           isLoading: false,
           reloading: false
         });
       }else{
+        console.log("it's empty");
+        var rebs = [];
+        rebs.push("{\"status\":\"empty\"}");
         this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(rebs),
           isLoading: false,
           reloading: false
         });
@@ -143,18 +373,15 @@ class RebList extends Component {
     }).done();
   }
 
-  handleScroll(e) {
-    if (!this.state.reloading) {
-      var PULLDOWN_DISTANCE = 40 // pixels
-      if (e.nativeEvent.contentOffset.y < -PULLDOWN_DISTANCE) {
-        /*this.setState({
-          reloading: true
-        });*/
+  _onRefresh() {
+    this.setState({reloading: true});
+    this.fetchData();
+  }
 
-        this.fetchData();
-      }
-      this.props.onScroll && this.props.onScroll(e)
-    }
+  doneOnBoarding() {
+    this.setState({isOnBoarding: false});
+    AsyncStorage.setItem("isOnBoarding", "false");
+    this.fetchData();
   }
 
 	async _fetchCurrentPage() {
@@ -169,17 +396,29 @@ class RebList extends Component {
 
   navReb(reb){
     this.props.navigator.push({
+      id: 'reb',
       title: 'Reb',
       component: Reb,
-      passProps: {rebus:reb.rebus, text:reb.text},
-      rightButtonTitle: 'Copy',
+      passProps: {rebus:reb.rebus, text:reb.text, language: reb.language},
+      rightButtonTitle: 'Re-use',
       onRightButtonPress: () => {
         this.props.navigator.push({
           title: "New",
           component: NewReb,
-          passProps: {rebus:reb.rebus, text:reb.text}
+          passProps: {rebus:reb.rebus, text:reb.text, language: reb.language}
         });}
     })
+  }
+  navNewReb(){
+    this.props.navigator.push({
+      id: 'newReb'
+    })
+  }
+
+  _onActionSelected(position) {
+    if(toolbarActions[position].title == "New"){
+      this.navNewReb();
+    }
   }
 
 }
