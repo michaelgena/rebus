@@ -6,8 +6,10 @@ import dismissKeyboard from 'dismissKeyboard';
 var ExpandingTextInput = require("./ExpandingTextInput");
 var Clipboard = require('react-native-clipboard');
 import Radio, {RadioButton} from 'react-native-simple-radio-button';
+
+//import Icon from 'react-native-vector-icons/Ionicons';
+
 var KDSocialShare = require('NativeModules').KDSocialShare;
-import Toggle from 'react-native-toggle';
 
 var MessageBarAlert = require('react-native-message-bar').MessageBar;
 var MessageBarManager = require('react-native-message-bar').MessageBarManager;
@@ -30,7 +32,7 @@ class Reb extends Component {
     this.viewMaxWidth = Dimensions.get('window').width
 
     this.state = {
-       finalRebus:this.props.rebus,
+       rebus:this.props.rebus,
        height: new Animated.Value(this.viewMaxHeight),
        hideShare: true,
        hideShareAndroid: true
@@ -39,7 +41,6 @@ class Reb extends Component {
 
   componentDidMount() {
     MessageBarManager.registerMessageBar(this.refs.alert);
-    this.toggle();
   }
 
   componentWillUnmount() {
@@ -48,7 +49,7 @@ class Reb extends Component {
 
   tweet() {
     KDSocialShare.tweet({
-        'text':this.state.finalRebus,
+        'text':this.state.rebus,
         'link':'',
         'imagelink':'',
       },
@@ -61,7 +62,7 @@ class Reb extends Component {
   shareOnFacebook() {
 
     KDSocialShare.shareOnFacebook({
-        'text':this.state.finalRebus,
+        'text':this.state.rebus,
         'link':'',
         'imagelink':'https://lh3.googleusercontent.com/Dffl5I2uYfuNhNeT2pMkHzJWjn99lz1uox4dEjRtwXA9OO5sO81h-oO8jmSkOFFFj3vwb7r7Z_qpIsoC3EKtTKc1M1MR',
       },
@@ -72,7 +73,7 @@ class Reb extends Component {
   }
 
   copyToClipboard(){
-    Clipboard.set(this.state.finalRebus);
+    Clipboard.set(this.state.rebus);
     MessageBarManager.showAlert({
       alertType: "info",
       title: "Copied in your clipboard.",
@@ -80,18 +81,6 @@ class Reb extends Component {
       messageNumberOfLines: 0,
     });
   }
-
-  toggle = () => {
-        if (Platform.OS === 'android'){
-          this.setState({
-              hideShareAndroid: !this.state.hideShareAndroid
-          });
-        }else{
-          this.setState({
-              hideShare: !this.state.hideShare
-          });
-        }
-  };
 
   navNewReb(){
     this.props.navigator.push({
@@ -107,67 +96,76 @@ class Reb extends Component {
   }
 
   render() {
-    return (
-      <Animated.View
-        style={{
-          height: this.state.height,
-          justifyContent: 'flex-end'
-        }}
-      >
-
-      <View style={styles.container}>
-        <View>
-          <ToolbarAndroid style={styles.toolbar}
-                      title={this.props.title}
-                      navIcon={require('./ic_arrow_back_white_24dp.png')}
-                      onIconClicked={this.props.navigator.pop}
-                      actions={toolbarActions}
-                      onActionSelected={this._onActionSelected.bind(this)}
-                      titleColor={'black'}/>
-        </View>
-        <ScrollView>
-          <Text style={styles.rebus}> {this.state.finalRebus}</Text>
-
-          <Toggle hidden={this.state.hideShare}>
-            <View style={styles.shareContainer}>
-
-              <TouchableHighlight onPress={this.tweet.bind(this)}>
-                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
-                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Twitter</Text>
-                </View>
-              </TouchableHighlight>
-
-              <TouchableHighlight onPress={this.shareOnFacebook.bind(this)}>
-                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#3b5998'}}>
-                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Facebook</Text>
-                </View>
-              </TouchableHighlight>
-
-              <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
-                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
-                  <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
-                </View>
-              </TouchableHighlight>
-
-            </View>
-          </Toggle>
-
-          <Toggle hidden={this.state.hideShareAndroid}>
-            <View style={styles.shareContainer}>
-
-              <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
-                <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
-                  <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
-                </View>
-              </TouchableHighlight>
-
-            </View>
-          </Toggle>
+    if (Platform.OS === 'android'){
+      return (
+        <Animated.View
+          style={{
+            height: this.state.height,
+            justifyContent: 'flex-end'
+          }}
+        >
+        <View style={styles.container}>
+          <View>
+            <ToolbarAndroid style={styles.toolbar}
+                        title={this.props.title}
+                        navIcon={require('./ic_arrow_back_white_24dp.png')}
+                        onIconClicked={this.props.navigator.pop}
+                        actions={toolbarActions}
+                        onActionSelected={this._onActionSelected.bind(this)}
+                        titleColor={'black'}/>
+          </View>
+          <ScrollView>
+            <Text style={styles.rebus}> {this.state.rebus}</Text>
+            <View style={styles.triangleCorner} />
+              <View style={styles.shareContainer}>
+                <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
+                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
+                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                  </View>
+                </TouchableHighlight>
+              </View>
+            </ScrollView>
+          </View>
           <MessageBarAlert ref="alert" />
-          </ScrollView>
-        </View>
-      </Animated.View>
-    );
+        </Animated.View>
+      );
+    }else{
+      return (
+        <Animated.View
+          style={{
+            height: this.state.height,
+            justifyContent: 'flex-end'
+          }}
+        >
+        <View style={styles.container}>
+          <ScrollView>
+            <Text style={styles.rebus}> {this.state.rebus}</Text>
+            <View style={styles.triangleCorner} />
+              <View style={styles.shareContainer}>
+                <TouchableHighlight onPress={this.tweet.bind(this)}>
+                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
+                   <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Twitter</Text>
+                  </View>
+                </TouchableHighlight>
+
+                <TouchableHighlight onPress={this.shareOnFacebook.bind(this)}>
+                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#3b5998'}}>
+                   <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Facebook</Text>
+                  </View>
+                </TouchableHighlight>
+
+                <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
+                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
+                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                  </View>
+                </TouchableHighlight>
+              </View>
+            </ScrollView>
+          </View>
+          <MessageBarAlert ref="alert" />
+        </Animated.View>
+      );
+    }
   }
 
 }
@@ -176,7 +174,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     flexDirection: 'column',
-    backgroundColor: '#FDF058'
+    backgroundColor: '#FFFFFF'
   },
   input:{
     height: 50,
@@ -234,10 +232,18 @@ const styles = StyleSheet.create({
   },
   rebus: {
     fontSize: 30,
-    alignSelf: 'flex-start',
-    marginLeft: 5,
+    alignSelf: 'stretch',
+    marginTop: 5,
     marginRight: 5,
-    color: 'black'
+    color: 'black',
+    borderRadius: 15,
+    paddingLeft: 14,
+    paddingRight: 5,
+    paddingBottom: 10,
+    paddingTop: 8,
+    marginLeft: 20,
+    justifyContent: 'center',
+    backgroundColor: '#FDF058',
   },
   info:{
     paddingTop: 65,
@@ -246,6 +252,21 @@ const styles = StyleSheet.create({
   toolbar: {
     backgroundColor: '#FDF058',
     height: 56,
+  },
+  triangleCorner: {
+    alignSelf: 'flex-end',
+    marginRight: 20,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderRightWidth: 20,
+    borderTopWidth: 20,
+    borderRightColor: 'transparent',
+    borderTopColor: '#FDF058',
+    transform: [
+      {rotate: '90deg'}
+    ]
   }
 })
 module.exports = Reb;

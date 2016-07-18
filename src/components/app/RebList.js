@@ -55,10 +55,11 @@ var styles = StyleSheet.create({
      alignItems: 'center'
    },
    image: {
-      height: 60,
-      width: 60,
-      borderRadius: 30,
-      margin: 5
+      height: 50,
+      width: 50,
+      borderRadius: 25,
+      margin: 5,
+      alignSelf: 'flex-start',
     },
     nickname:{
       fontSize: 20,
@@ -74,15 +75,29 @@ var styles = StyleSheet.create({
       paddingBottom: 10,
       paddingTop: 8,
       marginRight: Platform.OS === 'android' ? 15 : 5,
+      marginTop: 5,
       color: 'black',
       justifyContent: 'center',
       backgroundColor: '#FDF058',
+      alignSelf: 'stretch',
     },
     messageContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        marginTop: Platform.OS === 'android' ? 0 : 65,
+      flex: 1,
+      justifyContent: 'center',
+      marginTop: Platform.OS === 'android' ? 0 : 65,
     },
+    triangleCorner: {
+      alignSelf: 'flex-start',
+      marginLeft: 20,
+      width: 0,
+      height: 0,
+      backgroundColor: 'transparent',
+      borderStyle: 'solid',
+      borderRightWidth: 20,
+      borderTopWidth: 20,
+      borderRightColor: 'transparent',
+      borderTopColor: '#FDF058'
+  },
 });
 
 var toolbarActions = [
@@ -136,12 +151,10 @@ class RebList extends Component {
                   <View style={styles.messageContainer}>
                     <View style={{flex:1, flexDirection: 'row',}}>
                       <Image style={styles.image} source={require('../../img/rebbot.png')}/>
-                    </View>
-
-                    <View style={{flex:1, flexDirection: 'row',}}>
-                      <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
                         <Text style={styles.message}>Hi! I'm Rebbot. I'm here to help you use Rebby.</Text>
+                        <View style={styles.triangleCorner} />
+
                       </View>
                     </View>
 
@@ -151,6 +164,7 @@ class RebList extends Component {
                       <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
                         <Text style={styles.message}>To start creating a Rebus press on the New button above.</Text>
+                        <View style={styles.triangleCorner} />
                       </View>
                     </View>
 
@@ -160,6 +174,7 @@ class RebList extends Component {
                       <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
                         <Text style={styles.message}>Type your text and press Done. You can then copy/paste it and share it with your friends.</Text>
+                        <View style={styles.triangleCorner} />
                       </View>
                     </View>
 
@@ -169,6 +184,7 @@ class RebList extends Component {
                       <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
                         <Text style={styles.message}>One last thing. You can browse back into your Rebus history from the Home page.</Text>
+                        <View style={styles.triangleCorner} />
                       </View>
                     </View>
 
@@ -178,6 +194,7 @@ class RebList extends Component {
                       <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
                         <Text style={styles.message}>H🅰ve ⛽-el+n! ♥ </Text>
+                        <View style={styles.triangleCorner} />
                       </View>
                     </View>
 
@@ -195,14 +212,12 @@ class RebList extends Component {
       }else{
         return (
           <View style={styles.messageContainer}>
-            <View style={{flex:1, flexDirection: 'row',}}>
-              <Image style={styles.image} source={require('../../img/rebbot.png')}/>
-            </View>
 
             <View style={{flex:1, flexDirection: 'row',}}>
-              <View style={{width:60}}/>
+                <Image style={styles.image} source={require('../../img/rebbot.png')}/>
               <View style={{flex:1, flexDirection: 'column',}}>
                 <Text style={styles.message}>Hi! I'm Rebbot. I'm here to help you use Rebby.</Text>
+                <View style={styles.triangleCorner} />
               </View>
             </View>
 
@@ -212,6 +227,7 @@ class RebList extends Component {
               <View style={{width:60}}/>
               <View style={{flex:1, flexDirection: 'column',}}>
                 <Text style={styles.message}>To start creating a Rebus press on the New button above.</Text>
+                <View style={styles.triangleCorner} />
               </View>
             </View>
 
@@ -221,6 +237,7 @@ class RebList extends Component {
               <View style={{width:60}}/>
               <View style={{flex:1, flexDirection: 'column',}}>
                 <Text style={styles.message}>Type your text and press Done. You can then copy/paste it and share it with your friends.</Text>
+                <View style={styles.triangleCorner} />
               </View>
             </View>
 
@@ -230,6 +247,7 @@ class RebList extends Component {
               <View style={{width:60}}/>
               <View style={{flex:1, flexDirection: 'column',}}>
                 <Text style={styles.message}>One last thing. You can browse back into your Rebus history from the Home page.</Text>
+                <View style={styles.triangleCorner} />
               </View>
             </View>
 
@@ -239,6 +257,7 @@ class RebList extends Component {
               <View style={{width:60}}/>
               <View style={{flex:1, flexDirection: 'column',}}>
                 <Text style={styles.message}>H🅰ve ⛽-el+n! ♥ </Text>
+                <View style={styles.triangleCorner} />
               </View>
             </View>
 
