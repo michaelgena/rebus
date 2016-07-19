@@ -11,6 +11,9 @@ var KDSocialShare = require('NativeModules').KDSocialShare;
 var MessageBarAlert = require('react-native-message-bar').MessageBar;
 var MessageBarManager = require('react-native-message-bar').MessageBarManager;
 
+import Icon from 'react-native-vector-icons/Ionicons';
+import Toggle from 'react-native-toggle';
+
 var dataEN = require("../../data/EN.js");
 var dataFR = require("../../data/FR.js");
 var jsonEN = dataEN.get();
@@ -103,7 +106,7 @@ class NewReb extends Component {
         toValue: this.viewMaxHeight - e.endCoordinates.height,
         duration: 200,
       }).start();
-    }
+  }
 
   onKeyboardDidHide(e){
     Animated.timing(this.state.height, {
@@ -182,8 +185,8 @@ class NewReb extends Component {
                 <View style={styles.triangleCorner} />
                 <View style={styles.shareContainer}>
                   <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
-                    <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
-                      <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                    <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
+                      <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy </Text><Icon name="ios-clipboard" size={25} color="#FFFFFF"/>
                     </View>
                   </TouchableHighlight>
                 </View>
@@ -225,20 +228,20 @@ class NewReb extends Component {
                 <View style={styles.triangleCorner} />
                 <View style={styles.shareContainer}>
                   <TouchableHighlight onPress={this.tweet.bind(this)}>
-                    <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
-                     <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Twitter</Text>
+                    <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
+                     <Text style={{color:'#ffffff',fontWeight:'800'}}>Share </Text><Icon name="logo-twitter" size={25} color="#FFFFFF" />
                     </View>
                   </TouchableHighlight>
 
                   <TouchableHighlight onPress={this.shareOnFacebook.bind(this)}>
-                    <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#3b5998'}}>
-                     <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Facebook</Text>
+                    <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#3b5998'}}>
+                     <Text style={{color:'#ffffff',fontWeight:'800',}}>Share </Text><Icon name="logo-facebook" size={25} color="#FFFFFF" />
                     </View>
                   </TouchableHighlight>
 
                   <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
-                    <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
-                      <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                    <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
+                      <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy </Text><Icon name="ios-clipboard" size={25} color="#FFFFFF"/>
                     </View>
                   </TouchableHighlight>
                 </View>
@@ -286,8 +289,10 @@ class NewReb extends Component {
             onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
             onKeyboardDidHide={this.onKeyboardDidHide.bind(this)}
             >
-            <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
-            <View style={styles.triangleCorner} />
+
+              <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
+              <View style={styles.triangleCorner} />
+
             </ScrollView>
             <View style={styles.textInputContainer}>
             <Radio
@@ -329,8 +334,10 @@ class NewReb extends Component {
             onKeyboardDidShow={this.onKeyboardDidShow.bind(this)}
             onKeyboardDidHide={this.onKeyboardDidHide.bind(this)}
             >
+
             <Text style={styles.rebus}> {this.generate(this.state.text)}</Text>
             <View style={styles.triangleCorner} />
+
             </ScrollView>
           <View style={styles.textInputContainer}>
             <Radio
@@ -555,7 +562,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     flexDirection: 'column',
-    backgroundColor: '#FFFFFF'
+    backgroundColor: '#F9F9F9'
   },
   input:{
     height: 50,

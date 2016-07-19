@@ -9,6 +9,7 @@ import java.util.List;
 import com.horcrux.toggle.*;
 import com.davidsandor.rnclipboardandroid.RNClipboardAndroidPackage;
 import cl.json.RNSharePackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -40,7 +41,8 @@ public class MainActivity extends ReactActivity {
             new MainReactPackage(),
             new ToggleViewPackage(),
             new RNClipboardAndroidPackage(),
-            new RNSharePackage()
+            new RNSharePackage(),
+            new VectorIconsPackage()
         );
     }
 }

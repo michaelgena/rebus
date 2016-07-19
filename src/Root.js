@@ -28,9 +28,7 @@ class Root extends Component{
             onRightButtonPress: () => {
               this.refs.nav.navigator.push({
                 title: "New",
-                component: NewReb,
-                rightButtonTitle: 'Cancel',
-                onRightButtonPress: () => { this.refs.nav.navigator.pop(); }
+                component: NewReb
               });}
           }}
 

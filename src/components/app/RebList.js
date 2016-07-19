@@ -10,7 +10,7 @@ var styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#FDF058',
+      backgroundColor: '#F9F9F9',
       paddingTop: Platform.OS === 'android' ? 0 : 30,
     },
     title: {
@@ -59,11 +59,11 @@ var styles = StyleSheet.create({
       width: 50,
       borderRadius: 25,
       margin: 5,
-      alignSelf: 'flex-start',
+      alignSelf: 'center',
     },
     nickname:{
-      fontSize: 20,
-      marginTop: 30,
+      fontSize: 16,
+      marginTop: 15,
       color: 'black',
       flex: 1
     },
@@ -74,7 +74,7 @@ var styles = StyleSheet.create({
       paddingRight: 14,
       paddingBottom: 10,
       paddingTop: 8,
-      marginRight: Platform.OS === 'android' ? 15 : 5,
+      marginLeft: Platform.OS === 'android' ? 15 : 5,
       marginTop: 5,
       color: 'black',
       justifyContent: 'center',
@@ -149,57 +149,59 @@ class RebList extends Component {
                   onActionSelected={this._onActionSelected.bind(this)}/>
                   <ScrollView>
                   <View style={styles.messageContainer}>
-                    <View style={{flex:1, flexDirection: 'row',}}>
+
+                    <View style={{flex:1, flexDirection: 'column',alignItems: 'center', justifyContent:'center',}}>
                       <Image style={styles.image} source={require('../../img/rebbot.png')}/>
+                    </View>
+
+                    <View style={{flex:1, flexDirection: 'row',}}>
                       <View style={{flex:1, flexDirection: 'column',}}>
                         <Text style={styles.message}>Hi! I'm Rebbot. I'm here to help you use Rebby.</Text>
                         <View style={styles.triangleCorner} />
-
                       </View>
+                      <View style={{width:60}}/>
                     </View>
 
                     <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
 
                     <View style={{flex:1, flexDirection: 'row',}}>
-                      <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
-                        <Text style={styles.message}>To start creating a Rebus press on the New button above.</Text>
+                        <Text style={styles.message}>To start creating a rebus press on the "New" button above.</Text>
                         <View style={styles.triangleCorner} />
                       </View>
+                      <View style={{width:60}}/>
+                    </View>
+
+                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+                    <View style={{flex:1, flexDirection: 'row',}}>
+                      <View style={{flex:1, flexDirection: 'column',}}>
+                        <Text style={styles.message}>Type your text and press "Done". You can then copy/paste it and share it with your friends.</Text>
+                        <View style={styles.triangleCorner} />
+                      </View>
+                      <View style={{width:60}}/>
                     </View>
 
                     <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
 
                     <View style={{flex:1, flexDirection: 'row',}}>
-                      <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
-                        <Text style={styles.message}>Type your text and press Done. You can then copy/paste it and share it with your friends.</Text>
+                        <Text style={styles.message}>One last thing. You can browse back into your rebus history from the Home page.</Text>
                         <View style={styles.triangleCorner} />
                       </View>
-                    </View>
-
-                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
-
-                    <View style={{flex:1, flexDirection: 'row',}}>
                       <View style={{width:60}}/>
-                      <View style={{flex:1, flexDirection: 'column',}}>
-                        <Text style={styles.message}>One last thing. You can browse back into your Rebus history from the Home page.</Text>
-                        <View style={styles.triangleCorner} />
-                      </View>
                     </View>
 
                     <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
 
                     <View style={{flex:1, flexDirection: 'row'}}>
-                      <View style={{width:60}}/>
                       <View style={{flex:1, flexDirection: 'column',}}>
                         <Text style={styles.message}>H🅰ve ⛽-el+n! ♥ </Text>
                         <View style={styles.triangleCorner} />
                       </View>
+                      <View style={{width:60}}/>
                     </View>
-
-                    <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
                   </View>
+
                   </ScrollView>
                   <TouchableHighlight onPress={() => this.doneOnBoarding()}>
                     <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
@@ -212,57 +214,58 @@ class RebList extends Component {
       }else{
         return (
           <View style={styles.messageContainer}>
-
-            <View style={{flex:1, flexDirection: 'row',}}>
+            <ScrollView>
+              <View style={{flex:1, flexDirection: 'column',alignItems: 'center', justifyContent:'center',}}>
                 <Image style={styles.image} source={require('../../img/rebbot.png')}/>
-              <View style={{flex:1, flexDirection: 'column',}}>
-                <Text style={styles.message}>Hi! I'm Rebbot. I'm here to help you use Rebby.</Text>
-                <View style={styles.triangleCorner} />
               </View>
-            </View>
 
-            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
-
-            <View style={{flex:1, flexDirection: 'row',}}>
-              <View style={{width:60}}/>
-              <View style={{flex:1, flexDirection: 'column',}}>
-                <Text style={styles.message}>To start creating a Rebus press on the New button above.</Text>
-                <View style={styles.triangleCorner} />
+              <View style={{flex:1, flexDirection: 'row',}}>
+                <View style={{flex:1, flexDirection: 'column',}}>
+                  <Text style={styles.message}>Hi! I'm Rebbot. I'm here to help you use Rebby.</Text>
+                  <View style={styles.triangleCorner} />
+                </View>
+                <View style={{width:60}}/>
               </View>
-            </View>
 
-            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+              <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
 
-            <View style={{flex:1, flexDirection: 'row',}}>
-              <View style={{width:60}}/>
-              <View style={{flex:1, flexDirection: 'column',}}>
-                <Text style={styles.message}>Type your text and press Done. You can then copy/paste it and share it with your friends.</Text>
-                <View style={styles.triangleCorner} />
+              <View style={{flex:1, flexDirection: 'row',}}>
+                <View style={{flex:1, flexDirection: 'column',}}>
+                  <Text style={styles.message}>To start creating a rebus press on the "New" button above.</Text>
+                  <View style={styles.triangleCorner} />
+                </View>
+                <View style={{width:60}}/>
               </View>
-            </View>
 
-            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
-
-            <View style={{flex:1, flexDirection: 'row'}}>
-              <View style={{width:60}}/>
-              <View style={{flex:1, flexDirection: 'column',}}>
-                <Text style={styles.message}>One last thing. You can browse back into your Rebus history from the Home page.</Text>
-                <View style={styles.triangleCorner} />
+              <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+              <View style={{flex:1, flexDirection: 'row',}}>
+                <View style={{flex:1, flexDirection: 'column',}}>
+                  <Text style={styles.message}>Type your text and press "Done". You can then copy/paste it and share it with your friends.</Text>
+                  <View style={styles.triangleCorner} />
+                </View>
+                <View style={{width:60}}/>
               </View>
-            </View>
 
-            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+              <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
 
-            <View style={{flex:1, flexDirection: 'row'}}>
-              <View style={{width:60}}/>
-              <View style={{flex:1, flexDirection: 'column',}}>
-                <Text style={styles.message}>H🅰ve ⛽-el+n! ♥ </Text>
-                <View style={styles.triangleCorner} />
+              <View style={{flex:1, flexDirection: 'row',}}>
+                <View style={{flex:1, flexDirection: 'column',}}>
+                  <Text style={styles.message}>One last thing. You can browse back into your rebus history from the Home page.</Text>
+                  <View style={styles.triangleCorner} />
+                </View>
+                <View style={{width:60}}/>
               </View>
-            </View>
 
-            <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+              <View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
 
+              <View style={{flex:1, flexDirection: 'row'}}>
+                <View style={{flex:1, flexDirection: 'column',}}>
+                  <Text style={styles.message}>H🅰ve ⛽-el+n! ♥ </Text>
+                  <View style={styles.triangleCorner} />
+                </View>
+                <View style={{width:60}}/>
+              </View>
+            </ScrollView>
             <TouchableHighlight onPress={() => this.doneOnBoarding()}>
               <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Got it!</Text>

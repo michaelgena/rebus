@@ -7,7 +7,7 @@ var ExpandingTextInput = require("./ExpandingTextInput");
 var Clipboard = require('react-native-clipboard');
 import Radio, {RadioButton} from 'react-native-simple-radio-button';
 
-//import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 var KDSocialShare = require('NativeModules').KDSocialShare;
 
@@ -119,8 +119,8 @@ class Reb extends Component {
             <View style={styles.triangleCorner} />
               <View style={styles.shareContainer}>
                 <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
-                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
-                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                  <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth, height: 50,backgroundColor:'#CCCCCC'}}>
+                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy </Text><Icon name="ios-clipboard" size={25} color="#FFFFFF"/>
                   </View>
                 </TouchableHighlight>
               </View>
@@ -143,20 +143,20 @@ class Reb extends Component {
             <View style={styles.triangleCorner} />
               <View style={styles.shareContainer}>
                 <TouchableHighlight onPress={this.tweet.bind(this)}>
-                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
-                   <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Twitter</Text>
+                  <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#00aced'}}>
+                   <Text style={{color:'#ffffff',fontWeight:'800'}}>Share </Text><Icon name="logo-twitter" size={25} color="#FFFFFF" />
                   </View>
                 </TouchableHighlight>
 
                 <TouchableHighlight onPress={this.shareOnFacebook.bind(this)}>
-                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#3b5998'}}>
-                   <Text style={{color:'#ffffff',fontWeight:'800',}}>Share on Facebook</Text>
+                  <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#3b5998'}}>
+                   <Text style={{color:'#ffffff',fontWeight:'800',}}>Share </Text><Icon name="logo-facebook" size={25} color="#FFFFFF" />
                   </View>
                 </TouchableHighlight>
 
                 <TouchableHighlight onPress={this.copyToClipboard.bind(this)}>
-                  <View style={{alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
-                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy to Clipboard</Text>
+                  <View style={{flex:1, flexDirection: 'row', alignItems: 'center',justifyContent:'center', width: this.viewMaxWidth/3, height: 50,backgroundColor:'#CCCCCC'}}>
+                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Copy </Text><Icon name="ios-clipboard" size={25} color="#FFFFFF"/>
                   </View>
                 </TouchableHighlight>
               </View>
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     flexDirection: 'column',
-    backgroundColor: '#FFFFFF'
+    backgroundColor: '#F9F9F9'
   },
   input:{
     height: 50,
