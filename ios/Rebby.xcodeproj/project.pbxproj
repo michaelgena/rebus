@@ -24,6 +24,7 @@
 		5A68F9711D0482D1001C9EC1 /* KDSocialShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A68F9701D0482D1001C9EC1 /* KDSocialShare.m */; };
 		5A68F97E1D048435001C9EC1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A68F97D1D048435001C9EC1 /* Social.framework */; };
 		5A68F9881D0496AD001C9EC1 /* libRCTToggle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A68F9851D049683001C9EC1 /* libRCTToggle.a */; };
+		5AB0C6A71D6CCE52006E8B82 /* libRCTRealtimeMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB0C69D1D6CCE2D006E8B82 /* libRCTRealtimeMessaging.a */; };
 		5AB7A9DB1D3EA5EB0070AEE5 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5AB7A9DA1D3EA5EB0070AEE5 /* Ionicons.ttf */; };
 		5AB7A9EF1D3EA9150070AEE5 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB7A9EE1D3EA85D0070AEE5 /* libRNVectorIcons.a */; };
 		5AE7849D1D02348700AB95E6 /* libRNClipboard.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AE7849C1D02343700AB95E6 /* libRNClipboard.a */; };
@@ -108,6 +109,13 @@
 			remoteGlobalIDString = 1017893B1B283EE1006C41B8;
 			remoteInfo = RCTToggleTests;
 		};
+		5AB0C69C1D6CCE2D006E8B82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AB0C6931D6CCE2D006E8B82 /* RCTRealtimeMessaging.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 57E5A0A31AD2D06E00B19F3B;
+			remoteInfo = RCTRealtimeMessaging;
+		};
 		5AB7A9ED1D3EA85D0070AEE5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5AB7A9E91D3EA85D0070AEE5 /* RNVectorIcons.xcodeproj */;
@@ -162,6 +170,7 @@
 		5A68F9701D0482D1001C9EC1 /* KDSocialShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KDSocialShare.m; path = "../node_modules/react-native-social-share/iOS/KDSocialShare.m"; sourceTree = "<group>"; };
 		5A68F97D1D048435001C9EC1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		5A68F97F1D049683001C9EC1 /* RCTToggle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTToggle.xcodeproj; path = "../node_modules/react-native-toggle/ios/RCTToggle.xcodeproj"; sourceTree = "<group>"; };
+		5AB0C6931D6CCE2D006E8B82 /* RCTRealtimeMessaging.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTRealtimeMessaging.xcodeproj; path = "../node_modules/react-native-realtimemessaging-ios/RCTRealtimeMessaging.xcodeproj"; sourceTree = "<group>"; };
 		5AB7A9DA1D3EA5EB0070AEE5 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		5AB7A9E91D3EA85D0070AEE5 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		5AE7848D1D02343700AB95E6 /* RNClipboard.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNClipboard.xcodeproj; path = "../node_modules/react-native-clipboard/RNClipboard.xcodeproj"; sourceTree = "<group>"; };
@@ -181,6 +190,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AB0C6A71D6CCE52006E8B82 /* libRCTRealtimeMessaging.a in Frameworks */,
 				5AB7A9EF1D3EA9150070AEE5 /* libRNVectorIcons.a in Frameworks */,
 				5A68F9881D0496AD001C9EC1 /* libRCTToggle.a in Frameworks */,
 				5A68F97E1D048435001C9EC1 /* Social.framework in Frameworks */,
@@ -305,6 +315,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5AB0C6941D6CCE2D006E8B82 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5AB0C69D1D6CCE2D006E8B82 /* libRCTRealtimeMessaging.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5AB7A9EA1D3EA85D0070AEE5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,6 +354,7 @@
 				5A68F97F1D049683001C9EC1 /* RCTToggle.xcodeproj */,
 				5A68F96F1D0482D1001C9EC1 /* KDSocialShare.h */,
 				5A68F9701D0482D1001C9EC1 /* KDSocialShare.m */,
+				5AB0C6931D6CCE2D006E8B82 /* RCTRealtimeMessaging.xcodeproj */,
 				5AE7848D1D02343700AB95E6 /* RNClipboard.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -472,6 +491,10 @@
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
 				},
 				{
+					ProductGroup = 5AB0C6941D6CCE2D006E8B82 /* Products */;
+					ProjectRef = 5AB0C6931D6CCE2D006E8B82 /* RCTRealtimeMessaging.xcodeproj */;
+				},
+				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
 					ProjectRef = 139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */;
 				},
@@ -581,6 +604,13 @@
 			fileType = wrapper.cfbundle;
 			path = RCTToggleTests.xctest;
 			remoteRef = 5A68F9861D049683001C9EC1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5AB0C69D1D6CCE2D006E8B82 /* libRCTRealtimeMessaging.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTRealtimeMessaging.a;
+			remoteRef = 5AB0C69C1D6CCE2D006E8B82 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5AB7A9EE1D3EA85D0070AEE5 /* libRNVectorIcons.a */ = {

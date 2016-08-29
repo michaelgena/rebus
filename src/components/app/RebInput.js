@@ -14,6 +14,11 @@ var MessageBarManager = require('react-native-message-bar').MessageBarManager;
 import Icon from 'react-native-vector-icons/Ionicons';
 import Toggle from 'react-native-toggle';
 
+import realtimeIOS from '../../../RCTRealtimeMessagingIOS';
+
+var RCTRealtimeMessaging;
+RCTRealtimeMessaging = new realtimeIOS();
+
 var dataEN = require("../../data/EN.js");
 var dataFR = require("../../data/FR.js");
 var jsonEN = dataEN.get();
@@ -48,17 +53,18 @@ var radio_props = [
   {label: 'FR', value: 1 }
 ];
 
-class NewReb extends Component {
+class RebInput extends Component {
 
   constructor(props) {
     super(props);
 
     let textInputHeight = 0;
     if (Platform.OS === 'android'){
-      textInputHeight = 20;
+      textInputHeight = 40;
     }
     var STATUS_BAR_HEIGHT = Navigator.NavigationBar.Styles.General.StatusBarHeight;
-    this.viewMaxHeight = Dimensions.get('window').height - textInputHeight;
+    this.viewMaxHeight = 125 + textInputHeight;
+
     this.viewMaxWidth = Dimensions.get('window').width;
     this.userSelection = {};
     this.state = {
@@ -72,11 +78,50 @@ class NewReb extends Component {
        done: false,
        suggest1:{},
        suggest2:{},
-       suggest3:{}
+       suggest3:{},
+
+       channel: "yellow",
+       appKey: "xkCY9Z",
+       token: "oQcrOlauio9V",
+       connectionMetadata: "clientConnMeta",
+       clusterUrl: "http://ortc-developers.realtime.co/server/2.1/"
     };
   }
 
   componentDidMount() {
+
+    console.log('Trying to connect!');
+
+    RCTRealtimeMessaging.RTEventListener("onConnected",this._onConnected),
+    //RCTRealtimeMessaging.RTEventListener("onDisconnected",this._onDisconnected),
+    RCTRealtimeMessaging.RTEventListener("onSubscribed",this._onSubscribed),
+    //RCTRealtimeMessaging.RTEventListener("onUnSubscribed",this._onUnSubscribed),
+    //RCTRealtimeMessaging.RTEventListener("onException",this._onException),
+    //RCTRealtimeMessaging.RTEventListener("onMessage",this._onMessage),
+    //RCTRealtimeMessaging.RTEventListener("onPresence",this._onPresence);
+
+    RCTRealtimeMessaging.RTConnect(
+    {
+      appKey: this.state.appKey,
+      token: this.state.token,
+      connectionMetadata: this.state.connectionMetadata,
+      clusterUrl: this.state.clusterUrl
+    });
+
+  }
+
+  _onConnected(){
+    console.log('Connected!');
+    console.log('Trying to subscribe...');
+    RCTRealtimeMessaging.RTSubscribe("yellow", true);
+  }
+
+  _onSubscribed(subscribedEvent){
+    console.log('Subscribed!');
+  }
+
+  doSendMessage(message){
+    RCTRealtimeMessaging.RTSendMessage(message, this.state.channel);
   }
 
   componentWillUnmount() {
@@ -92,12 +137,16 @@ class NewReb extends Component {
         reb.date = Date.now();
         reb.language = this.state.language;
 
+        this.state.rebus = "";
+
         this.state.text = "";
         this.state.suggest1 = this.state.suggest2 = this.state.suggest3 = "";
         this.userSelection = {};
-        this.setState({
+        /*this.setState({
             done: true
-        });
+        });*/
+
+        this.doSendMessage(reb.rebus);
 
         var rebAsString = JSON.stringify(reb);
         rebAsString = rebAsString.replace(/,/g , "|");
@@ -297,7 +346,7 @@ class NewReb extends Component {
         <Animated.View
           style={{
             height: this.state.height,
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-start'
           }}
         >
         <View style={styles.container}>
@@ -695,7 +744,8 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     flexDirection: 'column',
-    backgroundColor: '#F9F9F9'
+    backgroundColor: '#FFFFFF',
+    marginBottom:20
   },
   input:{
     height: 50,
@@ -808,4 +858,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default NewReb;
+export default RebInput;

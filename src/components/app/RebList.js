@@ -3,6 +3,8 @@ import React, { Component, View, Text, StyleSheet,ListView,TouchableHighlight,Ac
 import Spinner from 'react-native-loading-spinner-overlay';
 import Reb from './Reb';
 import NewReb from './NewReb';
+import Icon from 'react-native-vector-icons/Ionicons';
+import RealtimeRCT from './RealtimeRCTAndroid';
 
 var styles = StyleSheet.create({
     container: {
@@ -101,7 +103,10 @@ var styles = StyleSheet.create({
 });
 
 var toolbarActions = [
-  {title: 'New', show: 'always'}
+  {title: 'New', show: 'always'},
+  { title: 'Contacts', iconName: 'md-contact', iconSize: 30, show: 'always' },
+  { title: 'Chats', iconName: 'md-chatbubbles', iconSize: 30, show: 'always' },
+  { title: 'Settings', iconName: 'md-settings', iconSize: 30, show: 'always' },
 ];
 
 class RebList extends Component {
@@ -142,7 +147,7 @@ class RebList extends Component {
             }}
           >
 
-            <ToolbarAndroid style={styles.toolbar}
+            <Icon.ToolbarAndroid style={styles.toolbar}
                   title="Home"
                   titleColor={'black'}
                   actions={toolbarActions}
@@ -281,7 +286,7 @@ class RebList extends Component {
       return (
 
           <View style={{flex: 1}}>
-            <ToolbarAndroid style={styles.toolbar}
+            <Icon.ToolbarAndroid style={styles.toolbar}
                     title="Home"
                     titleColor={'black'}
                     actions={toolbarActions}
@@ -440,6 +445,21 @@ class RebList extends Component {
   _onActionSelected(position) {
     if(toolbarActions[position].title == "New"){
       this.navNewReb();
+    }
+    if(toolbarActions[position].title == "Contacts"){
+      this.props.navigator.push({
+        id: 'realtimeRCT'
+      })
+    }
+    if(toolbarActions[position].title == "Chats"){
+      this.props.navigator.push({
+        id: 'realtimeRCT'
+      })
+    }
+    if(toolbarActions[position].title == "Settings"){
+      this.props.navigator.push({
+        id: 'realtimeRCT'
+      })
     }
   }
 

@@ -10,6 +10,7 @@ import com.horcrux.toggle.*;
 import com.davidsandor.rnclipboardandroid.RNClipboardAndroidPackage;
 import cl.json.RNSharePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import co.realtime.reactnativemessagingandroid.RealtimeMessagingPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -42,7 +43,8 @@ public class MainActivity extends ReactActivity {
             new ToggleViewPackage(),
             new RNClipboardAndroidPackage(),
             new RNSharePackage(),
-            new VectorIconsPackage()
+            new VectorIconsPackage(),
+            new RealtimeMessagingPackage()
         );
     }
 }
